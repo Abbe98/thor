@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Thor SPARQL Editor - K-samsök</title>
+    <link href="//cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css" rel="stylesheet" type="text/css"/>
+    <script src="//cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="raa-nav mb-2">
+    <img src="https://app.raa.se/styleguide/assets/images/logo/RAA_logo_farg_rgb.svg">
+    <ul>
+      <li><a href="#">Query Library</a></li>
+      <li><a href="#">Documentation</a></li>
+      <li><a href="#">Data model</a></li>
+    </ul>
+    </nav>
+    
+    <div id="queryEditor" class="ml-2 mr-2"></div>
+
+    <div style="background: white; height: 50px">
+      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;">
+        <option>Table</option>
+        <option>Pie Chart</option>
+        <option>Image Grid</option>
+      </select>
+      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;">
+        <option>Download as</option>
+        <option>CSV</option>
+        <option>JSON</option>
+        <option>Turtle</option>
+      </select>
+
+      <div class="float-right">
+        <span class="raa-label float-left" style="margin-top: 17px">viewing 5/5 rows</span>
+        <button class="raa-button raa-button-confirm float-right m-2">Execute</button>
+      </div>
+    </div>
+    
+    <div class="results float-left w-full ml-2 mr-2">
+      <table class="raa-table" style="width: calc(100% - 1rem)">
+        <thead>
+          <tr>
+            <th>?color</th>
+            <th>?count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Röd</td>
+            <td>3001</td>
+          </tr>
+          <tr>
+            <td>Vit</td>
+            <td>2376</td>
+          </tr>
+          <tr>
+            <td>Brun</td>
+            <td>1276</td>
+          </tr>
+          <tr>
+            <td>Grå</td>
+            <td>874</td>
+          </tr>
+          <tr>
+            <td>Gul</td>
+            <td>349</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
