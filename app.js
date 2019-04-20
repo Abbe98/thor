@@ -104,7 +104,10 @@ function render(data) {
     const tr = document.createElement('tr');
     vars.forEach(v => {
       const td = document.createElement('td');
-      const node = document.createTextNode(e[v].value);
+      let node = document.createTextNode('');
+      if (e[v]) {
+        node = document.createTextNode(e[v].value);
+      }
       td.appendChild(node);
       tr.appendChild(td);
     });
