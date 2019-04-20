@@ -139,3 +139,17 @@ select {
   border-radius: 2px;
   background: #b54216;
 }
+
+.raa-loading {
+  text-align: center;
+}
+
+@keyframes spinner-spin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(359deg); }
+}
+
+.raa-loading img {
+  animation: 2s linear infinite spinner-spin, .4s ease-in spinner-delayed-fade-in;
+  max-width: 7rem;
+}
