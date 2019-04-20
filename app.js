@@ -84,7 +84,6 @@ function render(data) {
   console.log(data)
   const table = document.createElement('table');
   table.classList.add(['raa-table']);
-  table.style.width = 'calc(100% - 1rem)';
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
 

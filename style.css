@@ -121,9 +121,10 @@ select {
 
 .raa-table th,
 .raa-table td {
-    padding: 0.75rem;
-    vertical-align: top;
-    border-top: 1px solid #eceeef;
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #eceeef;
+  width: 100%;
 }
 
 .raa-label {
@@ -152,4 +153,8 @@ select {
 .raa-loading img {
   animation: 2s linear infinite spinner-spin, .4s ease-in spinner-delayed-fade-in;
   max-width: 7rem;
+}
+
+.results {
+  overflow-y: scroll;
 }
