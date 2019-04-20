@@ -38,14 +38,14 @@
 
       <div class="float-right">
         <span class="raa-label float-left" style="margin-top: 17px">viewing 5/5 rows</span>
-        <button class="raa-button raa-button-confirm float-right m-2">Execute</button>
+        <button class="raa-button raa-button-confirm float-right m-2" onclick="execute()">Execute</button>
       </div>
     </div>
     
-    <div class="results float-left w-full ml-2 mr-2">
-      <!--<div class="raa-loading">
+    <div class="results float-left w-full ml-2 mr-2" id="resultContainer">
+      <div class="raa-loading" id="queryLoadingIndicator" style="display: none;">
         <img src="assets/loading.svg" />
-      </div>-->
+      </div>
       <!--<table class="raa-table" style="width: calc(100% - 1rem)">
         <thead>
           <tr>

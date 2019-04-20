@@ -2,10 +2,11 @@ YASQE.defaults.sparql.showQueryButton = false;
 YASQE.defaults.sparql.endpoint = '';
 YASQE.defaults.value = '';
 
-YASQE.defaults.sparql.callbacks.success = function(data ) {
-  console.log('s', data);
+YASQE.defaults.sparql.callbacks.success = data => {
+  
+  document.querySelector('#queryLoadingIndicator').style.display = 'none';
+  render(data);
 }
-
 const commonNamespaces = [
   'soch: <http://kulturarvsdata.se/ksamsok#>',
   'owl: <http://www.w3.org/2002/07/owl#>',
@@ -73,3 +74,43 @@ YASQE.registerAutocompleter('customPropertyCompleter', customPropertyCompleter);
 YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter'];
 
 var yasqe = YASQE(document.getElementById('queryEditor'));
+
+function execute() {
+  document.querySelector('#queryLoadingIndicator').style.display = 'block';
+  yasqe.query(() => {}); // hack to make yasqe query the correct endpoint
+}
+
+function render(data) {
+  console.log(data)
+  const table = document.createElement('table');
+  table.classList.add(['raa-table']);
+  table.style.width = 'calc(100% - 1rem)';
+  const thead = document.createElement('thead');
+  const tr = document.createElement('tr');
+
+  let vars = [];
+  data.head.vars.forEach(e => {
+    const th = document.createElement('th');
+    const thNode = document.createTextNode(e);
+    vars.push(e);
+    th.appendChild(thNode);
+    tr.appendChild(th);
+  });
+  thead.appendChild(tr);
+  table.appendChild(thead);
+
+  tbody = document.createElement('tbody');
+  data.results.bindings.forEach(e => {
+    const tr = document.createElement('tr');
+    vars.forEach(v => {
+      const td = document.createElement('td');
+      const node = document.createTextNode(e[v].value);
+      td.appendChild(node);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  document.querySelector('#resultContainer').appendChild(table);
+}
