@@ -76,14 +76,18 @@ YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customC
 var yasqe = YASQE(document.getElementById('queryEditor'));
 
 function execute() {
+  if (document.querySelector('.results table')) {
+    document.querySelector('#resultContainer').removeChild(document.querySelector('.results table'));
+  }
+
   document.querySelector('#queryLoadingIndicator').style.display = 'block';
   yasqe.query(() => {}); // hack to make yasqe query the correct endpoint
 }
 
 function render(data) {
-  console.log(data)
   const table = document.createElement('table');
   table.classList.add(['raa-table']);
+  table.id = 'resultTable';
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
 
