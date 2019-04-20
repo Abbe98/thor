@@ -103,7 +103,7 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: transparent url(https://app.raa.se/styleguide/assets/images/arrow.png) no-repeat calc(100% - 1rem) center;
+  background: transparent url(assets/arrow.png) no-repeat calc(100% - 1rem) center;
 }
 
 .raa-table {
