@@ -103,7 +103,7 @@ function render(data) {
   table.appendChild(thead);
 
   tbody = document.createElement('tbody');
-  data.results.bindings.forEach(e => {
+  data.results.bindings.slice(-500).forEach(e => {
     const tr = document.createElement('tr');
     vars.forEach(v => {
       const td = document.createElement('td');
