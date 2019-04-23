@@ -85,6 +85,22 @@ function execute() {
   yasqe.query(() => {}); // hack to make yasqe query the correct endpoint
 }
 
+function getURIMarkup(yasqe, uri) {
+  const prefixes = yasqe.getPrefixesFromQuery();
+  let uriText = uri;
+  console.log(prefixes);
+  Object.keys(prefixes).forEach(key => {
+    if (uri.startsWith(prefixes[key])) {
+      uriText = uri.replace(prefixes[key], key + ':');
+    }
+  });
+  let a = document.createElement('a');
+  a.href = uri;
+  let node = document.createTextNode(uriText);
+  a.append(node);
+  return a;
+}
+
 function setResultsLabel(len) {
   const label = document.querySelector('#result-label');
   let text = `viewing ${len}/${len} rows`;
@@ -116,13 +132,19 @@ function render(data) {
 
   tbody = document.createElement('tbody');
   setResultsLabel(data.results.bindings.length);
-  data.results.bindings.slice(-500).forEach(e => {
+  data.results.bindings.slice(-500).forEach(e => { // this loop could be clearer
     const tr = document.createElement('tr');
     vars.forEach(v => {
       const td = document.createElement('td');
-      let node = document.createTextNode('');
+      let node;
       if (e[v]) {
-        node = document.createTextNode(e[v].value);
+        if (e[v].value.startsWith('http')) {
+          node = getURIMarkup(yasqe, e[v].value);
+        } else {
+          node = document.createTextNode(e[v].value);
+        }
+      } else {
+        node = document.createTextNode('');
       }
       td.appendChild(node);
       tr.appendChild(td);
