@@ -88,7 +88,7 @@ function execute() {
 function getURIMarkup(yasqe, uri) {
   const prefixes = yasqe.getPrefixesFromQuery();
   let uriText = uri;
-  console.log(prefixes);
+
   Object.keys(prefixes).forEach(key => {
     if (uri.startsWith(prefixes[key])) {
       uriText = uri.replace(prefixes[key], key + ':');
