@@ -11,6 +11,26 @@ body {
   background: #FBFBFB;
 }
 
+a {
+  display: inline-block;
+  color: #c94a18;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all .4s;
+  line-height: 1.5;
+  text-decoration-color: transparent;
+}
+
+a:active {
+  color: #a33b14;
+  border-color: #a33b14;
+}
+
+a:hover {
+  color: #b54216;
+  text-decoration-color: #b54216;
+}
+
 button,
 input,
 select {
