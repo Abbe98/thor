@@ -78,10 +78,22 @@ var yasqe = YASQE(document.getElementById('queryEditor'));
 function execute() {
   if (document.querySelector('.results table')) {
     document.querySelector('#resultContainer').removeChild(document.querySelector('.results table'));
+    document.querySelector('#result-label').style.display = 'none';
   }
 
   document.querySelector('#queryLoadingIndicator').style.display = 'block';
   yasqe.query(() => {}); // hack to make yasqe query the correct endpoint
+}
+
+function setResultsLabel(len) {
+  const label = document.querySelector('#result-label');
+  let text = `viewing ${len}/${len} rows`;
+  if (len > 500) {
+    text = `viewing 500/${len} rows`;
+  }
+
+  label.innerText = text;
+  label.style.display = 'block';
 }
 
 function render(data) {
@@ -103,6 +115,7 @@ function render(data) {
   table.appendChild(thead);
 
   tbody = document.createElement('tbody');
+  setResultsLabel(data.results.bindings.length);
   data.results.bindings.slice(-500).forEach(e => {
     const tr = document.createElement('tr');
     vars.forEach(v => {
