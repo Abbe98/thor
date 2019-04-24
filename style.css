@@ -176,5 +176,5 @@ select {
 }
 
 .results {
-  overflow-y: scroll;
+  overflow-x: scroll;
 }
