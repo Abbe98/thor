@@ -24,10 +24,10 @@
     <div id="queryEditor" class="ml-2 mr-2"></div>
 
     <div>
-      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;">
-        <option>Table</option>
-        <option>Pie Chart</option>
-        <option>Image Grid</option>
+      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;" onchange="setRenderMode(this)">
+        <option value="table">Table</option>
+        <option value="pie">Pie Chart</option>
+        <option value="images">Image Grid</option>
       </select>
       <select class="raa-input raa-select float-left m-2" style="max-width: 200px;">
         <option>Download as</option>
@@ -41,11 +41,11 @@
         <button class="raa-button raa-button-confirm float-right m-2" onclick="execute()">Execute</button>
       </div>
     </div>
-    
-    <div class="results float-left ml-2 mr-2" id="resultContainer" style="width: calc(100% - 1rem)">
-      <div class="raa-loading" id="queryLoadingIndicator" style="display: none;">
-        <img src="assets/loading.svg" />
-      </div>
+
+    <div class="results float-left ml-2 mr-2" id="resultContainer" style="width: calc(100% - 1rem)"></div>
+
+    <div class="raa-loading" id="queryLoadingIndicator" style="display: none;">
+      <img src="assets/loading.svg" />
     </div>
 
     <script src="app.js"></script>

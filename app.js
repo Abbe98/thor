@@ -2,9 +2,10 @@ YASQE.defaults.sparql.showQueryButton = false;
 YASQE.defaults.sparql.endpoint = 'http://127.0.0.1:3030/soch/query';
 YASQE.defaults.value = '';
 
+let rawResponseData;
 YASQE.defaults.sparql.callbacks.success = data => {
-  
   document.querySelector('#queryLoadingIndicator').style.display = 'none';
+  rawResponseData = data;
   render(data);
 }
 const commonNamespaces = [
@@ -75,11 +76,15 @@ YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customC
 
 var yasqe = YASQE(document.getElementById('queryEditor'));
 
-function execute() {
-  if (document.querySelector('.results table')) {
-    document.querySelector('#resultContainer').removeChild(document.querySelector('.results table'));
+function clearResults() {
+  if (document.querySelector('.results').hasChildNodes()) {
+    document.querySelector('#resultContainer').innerHTML = '';
     document.querySelector('#result-label').style.display = 'none';
   }
+}
+
+function execute() {
+  clearResults();
 
   document.querySelector('#queryLoadingIndicator').style.display = 'block';
   yasqe.query(() => {}); // hack to make yasqe query the correct endpoint
@@ -101,18 +106,18 @@ function getURIMarkup(yasqe, uri) {
   return a;
 }
 
-function setResultsLabel(len) {
+function setResultsLabel(len, max) {
   const label = document.querySelector('#result-label');
   let text = `viewing ${len}/${len} rows`;
-  if (len > 500) {
-    text = `viewing 500/${len} rows`;
+  if (len > max) {
+    text = `viewing ${max}/${len} rows`;
   }
 
   label.innerText = text;
   label.style.display = 'block';
 }
 
-function render(data) {
+function renderTable() {
   const table = document.createElement('table');
   table.classList.add(['raa-table']);
   table.id = 'resultTable';
@@ -120,7 +125,7 @@ function render(data) {
   const tr = document.createElement('tr');
 
   let vars = [];
-  data.head.vars.forEach(e => {
+  rawResponseData.head.vars.forEach(e => {
     const th = document.createElement('th');
     const thNode = document.createTextNode(e);
     vars.push(e);
@@ -131,8 +136,8 @@ function render(data) {
   table.appendChild(thead);
 
   tbody = document.createElement('tbody');
-  setResultsLabel(data.results.bindings.length);
-  data.results.bindings.slice(-500).forEach(e => { // this loop could be clearer
+  setResultsLabel(rawResponseData.results.bindings.length, 500);
+  rawResponseData.results.bindings.slice(-500).forEach(e => { // this loop could be clearer
     const tr = document.createElement('tr');
     vars.forEach(v => {
       const td = document.createElement('td');
@@ -154,4 +159,42 @@ function render(data) {
   table.appendChild(tbody);
 
   document.querySelector('#resultContainer').appendChild(table);
+}
+
+function renderImages() {
+  const container = document.createElement('div');
+  container.id = 'resultImages';
+
+  setResultsLabel(rawResponseData.results.bindings.length, 500);
+  rawResponseData.results.bindings.slice(-100).forEach(row => {
+    if (row.thumbnail.value.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|tif)$)/) != null) {
+      const img = document.createElement('img');
+      img.src = row.thumbnail.value;
+      container.appendChild(img);
+    }
+  });
+
+  document.querySelector('#resultContainer').appendChild(container);
+}
+
+let renderMode = 'table';
+function setRenderMode(evt) {
+  renderMode = evt.options[evt.selectedIndex].value;
+  if (rawResponseData) {
+    clearResults();
+    render();
+  }
+}
+
+function render() {
+  if (renderMode === 'images') {
+    if (rawResponseData.head.vars.includes('thumbnail')) {
+      renderImages();
+    } else {
+      console.log('failed to render image grid'); // #TODO handle errors
+      renderTable();
+    }
+  } else {
+    renderTable();
+  }
 }
