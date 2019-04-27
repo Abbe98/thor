@@ -1,6 +1,7 @@
 YASQE.defaults.sparql.showQueryButton = false;
 YASQE.defaults.sparql.endpoint = 'http://127.0.0.1:3030/soch/query';
 YASQE.defaults.value = '';
+YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter'];
 
 let rawResponseData;
 YASQE.defaults.sparql.callbacks.success = data => {
@@ -8,45 +9,6 @@ YASQE.defaults.sparql.callbacks.success = data => {
   rawResponseData = data;
   render(data);
 }
-
-const customPropertyCompleter = function(yasqe) {
-  let completer = {
-    isValidCompletionPosition: () => YASQE.Autocompleters.properties.isValidCompletionPosition(yasqe),
-    preProcessToken: (token) => YASQE.Autocompleters.properties.preProcessToken(yasqe, token),
-    postProcessToken: (token, suggestedString) => YASQE.Autocompleters.properties.postProcessToken(yasqe, token, suggestedString),
-  };
-
-  completer.bulk = true;
-  completer.async = false;
-  completer.autoShow = true;
-
-  completer.persistent = 'customProperties';
-  completer.get = () => ['http://kulturarvsdata.se/ksamsok#context', 'http://kulturarvsdata.se/ksamsok#contextSuperType', 'http://kulturarvsdata.se/ksamsok#contextType'];
-
-  return completer;
-};
-
-const customClassCompleter = function(yasqe) {
-  let completer = {
-    isValidCompletionPosition: () =>  YASQE.Autocompleters.classes.isValidCompletionPosition(yasqe),
-    preProcessToken: (token) => YASQE.Autocompleters.classes.preProcessToken(yasqe, token),
-    postProcessToken: (token, suggestedString) => YASQE.Autocompleters.classes.postProcessToken(yasqe, token, suggestedString),
-  };
-
-  completer.bulk = true;
-  completer.async = false;
-  completer.autoShow = true;
-
-  completer.persistent = 'customClasses';
-  completer.get = () => ['http://kulturarvsdata.se/ksamsok#Context', 'http://kulturarvsdata.se/ksamsok#ContextType', 'http://kulturarvsdata.se/ksamsok#Continent', 'http://kulturarvsdata.se/ksamsok#Country', 'http://kulturarvsdata.se/ksamsok#DataQuality'];
-
-  return completer;
-};
-
-YASQE.registerAutocompleter('customClassCompleter', customClassCompleter);
-YASQE.registerAutocompleter('customPropertyCompleter', customPropertyCompleter);
-
-YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter'];
 
 var yasqe = YASQE(document.getElementById('queryEditor'));
 
