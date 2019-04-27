@@ -12,10 +12,24 @@ const commonNamespaces = [
   'rdfs: <http://www.w3.org/2000/01/rdf-schema#>',
   'wd: <http://www.wikidata.org/entity>',
   'wdt: <http://www.wikidata.org/prop/direct/>',
+  'wikibase: <http://wikiba.se/ontology#>',
+  'p: <http://www.wikidata.org/prop/>',
+  'ps: <http://www.wikidata.org/prop/statement/>',
+  'pq: <http://www.wikidata.org/prop/qualifier/>',
   'mwapi: <https://www.mediawiki.org/ontology#API/>',
+  'bd: <http://www.bigdata.com/rdf#>',
   'lido: <http://www.lido-schema.org/>',
   'dbpedia: <http://dbpedia.org/resource/>',
 ];
+
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bd: <http://www.bigdata.com/rdf#>
 
 YASQE.Autocompleters._prefixes = YASQE.Autocompleters.prefixes;
 YASQE.Autocompleters.prefixes = function(yasqe, completerName) {
