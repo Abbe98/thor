@@ -29,6 +29,14 @@ function download(evt) {
   }
 }
 
+function flashMessage(message) {
+  document.querySelector('#messageContainer').innerText = message;
+  document.querySelector('#messageContainer').style.display = 'block';
+  setTimeout(() => {
+    document.querySelector('#messageContainer').style.display = 'none';
+  }, 4000);
+}
+
 function execute() {
   clearResults();
 
@@ -137,7 +145,7 @@ function render() {
     if (rawResponseData.head.vars.includes('thumbnail')) {
       renderImages();
     } else {
-      console.log('failed to render image grid'); // #TODO handle errors
+      flashMessage('Could not render Image grid. No variable named "thumbnail".');
       renderTable();
     }
   } else {

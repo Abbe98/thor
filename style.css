@@ -179,3 +179,13 @@ select {
 .results {
   overflow-x: scroll;
 }
+
+.raa-alert {
+  background-color: #c94a17;
+  color: #fff;
+  padding: .75rem 1.25rem;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
