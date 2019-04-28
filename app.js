@@ -10,6 +10,15 @@ YASQE.defaults.sparql.callbacks.success = data => {
   render(data);
 }
 
+YASQE.defaults.sparql.callbacks.error = data => {
+  if (data.status == 400) {
+    flashMessage('400 Bad Request: Your SPARQL likely contains an error.')
+  } else {
+    flashMessage('Request failed for an unknown reason.');
+  }
+  document.querySelector('#queryLoadingIndicator').style.display = 'none';
+}
+
 var yasqe = YASQE(document.getElementById('queryEditor'));
 
 function clearResults() {
@@ -34,7 +43,7 @@ function flashMessage(message) {
   document.querySelector('#messageContainer').style.display = 'block';
   setTimeout(() => {
     document.querySelector('#messageContainer').style.display = 'none';
-  }, 4000);
+  }, 5000);
 }
 
 function execute() {
