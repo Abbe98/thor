@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width">
     <title>Thor SPARQL Editor - K-samsök</title>
 
-    <link href="style.css" rel="stylesheet">
-
     <link href="libs/tailwind.min.css" rel="stylesheet">
     <link href="libs/yasqe.min.css" rel="stylesheet">
     <script src="libs/yasqe.bundled.min.js"></script>
+
+    <link href="style.css" rel="stylesheet">
   </head>
   <body>
     <nav class="raa-nav mb-2">
     <img src="assets/soch-logo.svg">
     <ul>
       <li><a href="#">Query Library</a></li>
-      <li><a href="#">Documentation</a></li>
+      <li><a href="#documentation-modal">Documentation</a></li>
     </ul>
     </nav>
     
@@ -48,6 +48,33 @@
     <a id="download" download style="display:none"></a>
 
     <p class="raa-alert" id="messageContainer" style="display: none;"></p>
+
+    <div class="raa-modal-overlay" id="documentation-modal">
+      <div class="raa-modal">
+        <h2>Documentation</h2>
+
+        <a href="#" class="close"title="Close modal">
+          <img src="assets/close_white_orange.png" aria-hidden="true">
+        </a>
+
+        <div>
+          <h3>Using the Query Library</h3>
+          <p>Docs on using the query lib</p>
+  
+          <h3>Using Visualizations</h3>
+          <p>Thor has several built in visualizations in addition to the default table view. They can all be used by specifying specific variables described below.</p>
+  
+          <h4>Image Grid</h4>
+          <p>hej</p>
+  
+          <h3>Keyboard Shortcuts</h3>
+          <p>hej</p>
+  
+          <h3>Contribute</h3>
+          <p>Github, Query Lib etc</p>
+        </div>
+      </div>
+    </div>
 
     <script src="autocompleters/prefixes.js"></script>
     <script src="autocompleters/properties.js"></script>

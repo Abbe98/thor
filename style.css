@@ -11,6 +11,15 @@ body {
   background: #FBFBFB;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  margin-top: 1em;
+  margin-bottom: .7em;
+}
+
 a {
   display: inline-block;
   color: #c94a18;
@@ -188,4 +197,50 @@ select {
   bottom: 0;
   right: 0;
   left: 0;
+}
+
+.raa-modal-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 5000;
+  background-color: rgba(0,0,0,.5);
+  display: none;
+}
+
+.raa-modal-overlay:target {
+  display: flex;
+}
+
+.raa-modal {
+  z-index: 99997;
+  max-width: 900px;
+  position: relative;
+  flex: 1;
+  border-radius: 2px;
+  background-color: #fff;
+}
+
+.raa-modal .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.raa-modal h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.raa-modal div {
+  padding: 2rem;
+  padding-top: 0;
 }
