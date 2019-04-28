@@ -19,6 +19,16 @@ function clearResults() {
   }
 }
 
+function download(evt) {
+  const format = evt.options[evt.selectedIndex].value;
+  if (format === 'json') {
+    const downloadElm = document.querySelector('#download');
+    downloadElm.href = window.URL.createObjectURL(new Blob([JSON.stringify(rawResponseData)], { type: 'application/json' }));
+    downloadElm.download = 'query-result.json';
+    downloadElm.click();
+  }
+}
+
 function execute() {
   clearResults();
 

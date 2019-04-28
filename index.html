@@ -28,11 +28,9 @@
         <option value="pie">Pie Chart</option>
         <option value="images">Image Grid</option>
       </select>
-      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;">
+      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;" onchange="download(this)">
         <option>Download as</option>
-        <option>CSV</option>
-        <option>JSON</option>
-        <option>Turtle</option>
+        <option value="json">JSON</option>
       </select>
 
       <div class="float-right">
@@ -46,6 +44,8 @@
     <div class="raa-loading" id="queryLoadingIndicator" style="display: none;">
       <img src="assets/loading.svg" />
     </div>
+
+    <a id="download" download style="display:none"></a>
 
     <script src="autocompleters/prefixes.js"></script>
     <script src="autocompleters/properties.js"></script>
