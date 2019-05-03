@@ -161,3 +161,41 @@ function render() {
     renderTable();
   }
 }
+
+
+function setupQueryLibrary() {
+  fetch('https://byabbe.se/soch-sparql-query-library/queries.json').then(response => {
+    return response.json();
+  }).then(data => {
+    data.forEach(query => {
+      const li = document.createElement('li');
+      const div = document.createElement('div');
+      div.classList.add('interactive');
+      div.dataset.query = query.body;
+      const h3 = document.createElement('h3');
+      const h3Text = document.createTextNode(query.title);
+
+      h3.appendChild(h3Text);
+      div.appendChild(h3);
+
+      query.tags.forEach(tag => {
+        const span = document.createElement('span');
+        const spanText = document.createTextNode(tag);
+
+        span.classList.add('raa-label', 'ml-2');
+        span.appendChild(spanText);
+        div.appendChild(span);
+      });
+
+      div.addEventListener('click', e => {
+        const hostElm = (e.target.tagName === 'DIV') ? e.target : e.target.parentElement;
+        yasqe.setValue(hostElm.dataset.query);
+        window.location.hash = '';
+      });
+
+      li.appendChild(div);
+      document.querySelector('#query-library-container').appendChild(li);
+    });
+  });
+}
+setupQueryLibrary();

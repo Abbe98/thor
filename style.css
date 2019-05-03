@@ -239,7 +239,39 @@ select {
   margin-right: 2rem;
 }
 
-.raa-modal div {
+.raa-modal>div {
   padding: 2rem;
   padding-top: 0;
+}
+
+.raa-large-list {
+  padding: 0;
+}
+
+.raa-large-list li {
+  list-style: none;
+}
+
+.raa-large-list li div {
+  border-left: 7px solid #c94a17;
+  padding-left: 15px;
+  height: 60px;
+}
+
+.raa-large-list li div.interactive {
+  cursor: pointer;
+}
+
+.raa-large-list li div.interactive h3 {
+  color: #c94a17;
+}
+
+.raa-large-list li div.interactive:hover h3 {
+  text-decoration: underline;
+  color: #a33b14;
+}
+
+.raa-large-list li div.interactive:hover {
+  color: #a33b14;
+  border-color: #a33b14;
 }
