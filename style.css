@@ -157,7 +157,7 @@ select {
 }
 
 .raa-label {
-  display: block;
+  display: inline;
   padding: .2em .6em .3em;
   font-size: 75%;
   font-weight: 700;
@@ -167,7 +167,7 @@ select {
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: 2px;
-  background: #b54216;
+  background: #c94a17;
 }
 
 .raa-loading {
