@@ -130,7 +130,7 @@ function renderImages() {
 
   setResultsLabel(rawResponseData.results.bindings.length, 500);
   rawResponseData.results.bindings.slice(-100).forEach(row => {
-    if (row.thumbnail.value.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|tif)$)/) != null) {
+    if (row.thumbnail.value.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|tif)$)/i) != null) {
       const img = document.createElement('img');
       img.src = row.thumbnail.value;
       container.appendChild(img);
