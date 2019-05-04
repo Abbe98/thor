@@ -10,7 +10,7 @@ const commonNamespaces = [
   'cc: <http://creativecommons.org/ns#>',
   'rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>',
   'rdfs: <http://www.w3.org/2000/01/rdf-schema#>',
-  'wd: <http://www.wikidata.org/entity>',
+  'wd: <http://www.wikidata.org/entity/>',
   'wdt: <http://www.wikidata.org/prop/direct/>',
   'wikibase: <http://wikiba.se/ontology#>',
   'p: <http://www.wikidata.org/prop/>',
