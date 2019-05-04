@@ -188,6 +188,10 @@ select {
   overflow-x: scroll;
 }
 
+.results #resultImages {
+  max-height: 400px;
+}
+
 .raa-alert {
   background-color: #c94a17;
   color: #fff;
