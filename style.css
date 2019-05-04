@@ -188,7 +188,7 @@ select {
   overflow-x: scroll;
 }
 
-.results #resultImages {
+.results #resultImages img {
   max-height: 400px;
 }
 
