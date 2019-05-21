@@ -32,7 +32,7 @@ const customClassCompleter = function(yasqe) {
   completer.async = false;
   completer.autoShow = true;
 
-  completer.persistent = 'customClasses';
+  completer.persistent = false;
   completer.get = () => classes;
 
   return completer;

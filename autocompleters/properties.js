@@ -170,7 +170,7 @@ const customPropertyCompleter = function(yasqe) {
   completer.async = false;
   completer.autoShow = true;
 
-  completer.persistent = 'customProperties';
+  completer.persistent = false;
   completer.get = () => properties;
 
   return completer;

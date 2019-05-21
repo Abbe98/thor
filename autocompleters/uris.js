@@ -23,7 +23,7 @@ const customUrisCompleter = function(yasqe) {
   completer.async = false;
   completer.autoShow = true;
 
-  completer.persistent = 'customUris';
+  completer.persistent = false;
   completer.get = () => uris;
 
   return completer;
