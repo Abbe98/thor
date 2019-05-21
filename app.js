@@ -10,6 +10,11 @@ YASQE.defaults.sparql.callbacks.success = data => {
   render(data);
 }
 
+YASQE.defaults.sparql.callbacks.beforeSend = () => {
+  clearResults();
+  document.querySelector('#queryLoadingIndicator').style.display = 'block';
+}
+
 YASQE.defaults.sparql.callbacks.error = data => {
   if (data.status == 400) {
     flashMessage('400 Bad Request: Your SPARQL likely contains an error.')
@@ -44,13 +49,6 @@ function flashMessage(message) {
   setTimeout(() => {
     document.querySelector('#messageContainer').style.display = 'none';
   }, 5000);
-}
-
-function execute() {
-  clearResults();
-
-  document.querySelector('#queryLoadingIndicator').style.display = 'block';
-  yasqe.query(() => {}); // hack to make yasqe query the correct endpoint
 }
 
 function getURIMarkup(yasqe, uri) {
