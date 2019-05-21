@@ -1,7 +1,7 @@
 YASQE.defaults.sparql.showQueryButton = false;
 YASQE.defaults.sparql.endpoint = 'http://127.0.0.1:3030/soch/query';
 YASQE.defaults.value = '';
-YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter', 'customUrisCompleter', 'customServicesCompleter'];
+YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter', 'customUrisCompleter', 'customServicesCompleter', 'variables'];
 
 let rawResponseData;
 YASQE.defaults.sparql.callbacks.success = data => {
