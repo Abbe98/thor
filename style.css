@@ -192,6 +192,12 @@ select {
   max-height: 400px;
 }
 
+.results #booleanResult {
+  line-height: 5em;
+  text-align: center;
+  font-size: 5em;
+}
+
 .raa-alert {
   background-color: #c94a17;
   color: #fff;

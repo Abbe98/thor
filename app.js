@@ -203,7 +203,21 @@ function setRenderMode(evt) {
   }
 }
 
+function renderBoolean(bool) {
+  const p = document.createElement('p');
+  p.id = 'booleanResult';
+  const text = document.createTextNode(bool);
+  p.appendChild(text);
+  document.querySelector('#resultContainer').appendChild(p);
+}
+
 function render() {
+  // detect results from ASK queries
+  if (typeof rawResponseData['boolean'] === 'boolean') {
+    renderBoolean(rawResponseData['boolean'].toString());
+    return;
+  }
+
   if (renderMode === 'images') {
     if (rawResponseData.head.vars.includes('thumbnail')) {
       renderImages();
