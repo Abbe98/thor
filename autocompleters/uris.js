@@ -1,9 +1,10 @@
 const uris = [
   'http://kulturarvsdata.se/',
   'http://viaf.org/viaf/',
-  'http://www.wikidata.org/',
+  'http://www.wikidata.org/entity/',
   'http://data.europeana.eu/item/',
   'http://kulturnav.org/',
+  'http://sws.geonames.org/',
 ];
 
 const customUrisCompleter = function(yasqe) {
