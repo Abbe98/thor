@@ -10,7 +10,6 @@ const customServicesCompleter = function(yasqe) {
       const token = yasqe.getCompleteToken();
       const cur = yasqe.getCursor();
       const previousToken = yasqe.getPreviousNonWsToken(cur.line, token);
-      console.log(previousToken);
       if (previousToken.string == 'SERVICE') return true;
     },
     postProcessToken: (token, suggestedString) => YASQE.Autocompleters.properties.postProcessToken(yasqe, token, suggestedString),
