@@ -17,7 +17,10 @@ const customUrisCompleter = function(yasqe) {
       if (token.string.startsWith('<')) return true;
     },
     preProcessToken: (token) => YASQE.Autocompleters.properties.preProcessToken(yasqe, token),
-    postProcessToken: (token, suggestedString) => YASQE.Autocompleters.properties.postProcessToken(yasqe, token, suggestedString),
+    postProcessToken: (token, suggestedString) => {
+      // reusing the built in function as it handles namespaces.
+      return YASQE.Autocompleters.properties.postProcessToken(yasqe, token, suggestedString).replace('>', '')
+    }
   };
 
   completer.bulk = true;
