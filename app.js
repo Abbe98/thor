@@ -30,6 +30,18 @@ function getSharableURL() {
   return window.location.origin + '#query=' + encodeURIComponent(yasqe.getValue());
 }
 
+function populateShareModal() {
+  document.querySelector('#shareURLInput').value = getSharableURL();
+}
+
+function copyAndCloseShareModal() {
+  const copyTextarea = document.querySelector('#shareURLInput');
+  copyTextarea.focus();
+  copyTextarea.select();
+  document.execCommand('copy'); // assuming that copying never fails. Likely a bad idea.
+  window.location.hash = '';
+}
+
 function clearResults() {
   if (document.querySelector('.results').hasChildNodes()) {
     document.querySelector('#resultContainer').innerHTML = '';

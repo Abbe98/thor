@@ -216,6 +216,7 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
   padding: 2rem;
   z-index: 5000;
   background-color: rgba(0,0,0,.5);
@@ -283,4 +284,11 @@ select {
 .raa-large-list li div.interactive:hover {
   color: #a33b14;
   border-color: #a33b14;
+}
+
+.share-btn {
+  position: absolute;
+  z-index: 500;
+  right: 14px;
+  top: 78px;
 }

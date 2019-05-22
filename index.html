@@ -39,7 +39,9 @@
       <li><a href="#documentation-modal">Documentation</a></li>
     </ul>
     </nav>
-    
+
+    <a href="#share-modal" class="share-btn" title="Share query" onclick="populateShareModal()"><img src="assets/share.png" aria-hidden="true"></a>
+
     <div id="queryEditor" class="ml-2 mr-2"></div>
 
     <div>
@@ -68,6 +70,18 @@
     <a id="download" download style="display:none"></a>
 
     <p class="raa-alert" id="messageContainer" style="display: none;"></p>
+
+    <div class="raa-modal-overlay" id="share-modal">
+      <div class="raa-modal" style="max-width: 500px;">
+        <h3 style="margin: 1.5rem .5rem;">Shareable URL</h3>
+        <a href="#" class="close"title="Close modal">
+          <img src="assets/close_white_orange.png" aria-hidden="true">
+        </a>
+
+        <input type="url" readonly id="shareURLInput" class="m-2 raa-input" style="width:483px" onfocus="this.select();">
+        <button class="m-2 raa-button raa-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
+      </div>
+    </div>
 
     <div class="raa-modal-overlay" id="documentation-modal">
       <div class="raa-modal">
