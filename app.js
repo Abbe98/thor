@@ -294,10 +294,6 @@ setupQueryLibrary();
 const handle = document.querySelector('.handle');
 const container = document.querySelector('#queryEditor');
 
-function height_of($el) {
-  return parseInt(window.getComputedStyle($el).height.replace(/px$/, ''));
-}
-
 let startX;
 let startY;
 let startH;
@@ -306,16 +302,16 @@ function onDrag(e) {
   yasqe.setSize(null, Math.max(200, (startH + e.y - startY)) + 'px'); // 200px = min height
 }
 
-function onRelease(e) {
+function onRelease() {
   document.body.removeEventListener('mousemove', onDrag);
   window.removeEventListener('mouseup', onRelease);
 }
 
-handle.addEventListener('mousedown', (e) => {
+handle.addEventListener('mousedown', e => {
   startX = e.x;
   startY = e.y;
-  startH = height_of(container);
+  startH =  parseInt(window.getComputedStyle(container).height.replace(/px$/, ''));
 
-	document.body.addEventListener('mousemove', onDrag);
+  document.body.addEventListener('mousemove', onDrag);
   window.addEventListener('mouseup', onRelease);
 });
