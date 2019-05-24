@@ -289,6 +289,6 @@ select {
 .share-btn {
   position: absolute;
   z-index: 500;
-  right: 14px;
-  top: 78px;
+  right: 24px;
+  top: 86px;
 }
