@@ -2,6 +2,10 @@ const services = [
   'https://query.wikidata.org/bigdata/namespace/wdq/sparql',
   'http://libris.kb.se/sparql',
   'http://sparql.europeana.eu/',
+  'http://dbpedia.org/sparql',
+  'http://vocab.getty.edu/sparql.json',
+  'http://tools.wmflabs.org/mw2sparql/sparql',
+  'https://sophox.org/sparql',
 ];
 
 const customServicesCompleter = function(yasqe) {
