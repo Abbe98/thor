@@ -290,3 +290,32 @@ function setupQueryLibrary() {
   });
 }
 setupQueryLibrary();
+
+const handle = document.querySelector('.handle');
+const container = document.querySelector('#queryEditor');
+
+function height_of($el) {
+  return parseInt(window.getComputedStyle($el).height.replace(/px$/, ''));
+}
+
+let startX;
+let startY;
+let startH;
+
+function onDrag(e) {
+  yasqe.setSize(null, Math.max(200, (startH + e.y - startY)) + 'px'); // 200px = min height
+}
+
+function onRelease(e) {
+  document.body.removeEventListener('mousemove', onDrag);
+  window.removeEventListener('mouseup', onRelease);
+}
+
+handle.addEventListener('mousedown', (e) => {
+  startX = e.x;
+  startY = e.y;
+  startH = height_of(container);
+
+	document.body.addEventListener('mousemove', onDrag);
+  window.addEventListener('mouseup', onRelease);
+});

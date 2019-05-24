@@ -292,3 +292,19 @@ select {
   right: 24px;
   top: 86px;
 }
+
+.handle {
+  background: #f7f7f7;
+  height: 20px;
+  user-select: none;
+  cursor: row-resize;
+  border: 1px solid #dadada;
+  text-align: center;
+  margin: auto;
+  width: 40px;
+  margin-top: 5px;
+  position: absolute;
+  top: -25px;
+  z-index: 500;
+  left: calc(50% - 20px);
+}
