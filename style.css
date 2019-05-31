@@ -73,6 +73,13 @@ select {
   border-color: #008578;
 }
 
+.raa-button-confirm:hover,
+.raa-button-confirm:active,
+.raa-button-confirm:focus {
+  background-color: #00786c;
+  border-color: #00786c;
+}
+
 .raa-nav {
   padding-left: 1rem;
   padding-right: 1rem;
