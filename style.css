@@ -11,6 +11,11 @@ body {
   background: #FBFBFB;
 }
 
+
+ul {
+  margin: 0
+}
+
 h1,
 h2,
 h3,
@@ -297,7 +302,7 @@ select {
   position: absolute;
   z-index: 500;
   right: 24px;
-  top: 86px;
+  top: 87px;
 }
 
 .handle {
@@ -311,7 +316,31 @@ select {
   width: 40px;
   margin-top: 5px;
   position: absolute;
-  top: -25px;
+  top: -27px;
   z-index: 500;
   left: calc(50% - 20px);
+}
+
+/* UTILITIES */
+
+.m-lr-small {
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+
+.m-tb-small {
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+}
+
+.m-b-small {
+  margin-bottom: .5rem;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
 }

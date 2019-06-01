@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width">
     <title>Thor SPARQL Editor - K-samsök</title>
 
-    <link href="libs/tailwind.min.css" rel="stylesheet">
     <link href="libs/yasqe.min.css" rel="stylesheet">
     <script src="libs/yasqe.bundled.min.js"></script>
 
@@ -32,7 +31,7 @@
     <meta name="msapplication-TileImage" content="assets/favicon/raa-favicon-144.png">
   </head>
   <body>
-    <nav class="raa-nav mb-2">
+    <nav class="raa-nav m-b-small">
     <img src="assets/soch-logo.svg">
     <ul>
       <li><a href="#query-library-modal">Query Library</a></li>
@@ -42,29 +41,29 @@
 
     <a href="#share-modal" class="share-btn" title="Share query" onclick="populateShareModal()"><img src="assets/share.png" aria-hidden="true"></a>
 
-    <div id="queryEditor" class="ml-2 mr-2"></div>
-    <div class="relative" aria-hidden="true">
+    <div id="queryEditor" class="m-lr-small"></div>
+    <div style="position: relative;" aria-hidden="true">
       <div class="handle">≡</div>
     </div>
 
     <div>
-      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;" onchange="setRenderMode(this)">
+      <select class="raa-input raa-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="setRenderMode(this)">
         <option value="table">Table</option>
         <option value="pie">Pie Chart</option>
         <option value="images">Image Grid</option>
       </select>
-      <select class="raa-input raa-select float-left m-2" style="max-width: 200px;" onchange="download(this)">
+      <select class="raa-input raa-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="download(this)">
         <option>Download as</option>
         <option value="json">JSON</option>
       </select>
 
       <div class="float-right">
         <span style="display: none; margin-top: 17px;" id="result-label" class="raa-label float-left"></span>
-        <button class="raa-button raa-button-confirm float-right m-2" onclick="yasqe.query()">Execute</button>
+        <button class="raa-button raa-button-confirm float-right m-tb-small m-lr-small" onclick="yasqe.query()">Execute</button>
       </div>
     </div>
 
-    <div class="results float-left ml-2 mr-2" id="resultContainer" style="width: calc(100% - 1rem)"></div>
+    <div class="results float-left m-lr-small" id="resultContainer" style="width: calc(100% - 1rem)"></div>
 
     <div class="raa-loading" id="queryLoadingIndicator" style="display: none;">
       <img src="assets/loading.svg" />
@@ -81,8 +80,8 @@
           <img src="assets/close_white_orange.png" aria-hidden="true">
         </a>
 
-        <input type="url" readonly id="shareURLInput" class="m-2 raa-input" style="width:483px" onfocus="this.select();">
-        <button class="m-2 raa-button raa-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
+        <input type="url" readonly id="shareURLInput" class="m-tb-small m-lr-small raa-input" style="width:483px" onfocus="this.select();">
+        <button class="m-tb-small m-lr-small raa-button raa-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
       </div>
     </div>
 
