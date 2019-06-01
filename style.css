@@ -25,6 +25,10 @@ h4 {
   margin-bottom: .7em;
 }
 
+p {
+  margin: 0;
+}
+
 a {
   display: inline-block;
   color: #c94a18;
@@ -333,6 +337,10 @@ select {
 .m-tb-small {
   margin-bottom: .5rem;
   margin-top: .5rem;
+}
+
+.m-l-small {
+  margin-left: .5rem;
 }
 
 .m-b-small {

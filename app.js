@@ -273,7 +273,7 @@ function setupQueryLibrary() {
         const span = document.createElement('span');
         const spanText = document.createTextNode(tag);
 
-        span.classList.add('raa-label', 'ml-2');
+        span.classList.add('raa-label', 'm-l-small');
         span.appendChild(spanText);
         div.appendChild(span);
       });
