@@ -251,6 +251,7 @@ select {
   flex: 1;
   border-radius: 2px;
   background-color: #fff;
+  overflow: hidden;
 }
 
 .raa-modal .close {
