@@ -27,7 +27,7 @@ YASQE.defaults.sparql.callbacks.error = data => {
 var yasqe = YASQE(document.getElementById('queryEditor'));
 
 function getSharableURL() {
-  return window.location.origin + '#query=' + encodeURIComponent(yasqe.getValue());
+  return window.location.origin + window.location.pathname + '#query=' + encodeURIComponent(yasqe.getValue());
 }
 
 function populateShareModal() {
