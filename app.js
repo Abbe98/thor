@@ -1,5 +1,4 @@
 YASQE.defaults.sparql.showQueryButton = false;
-YASQE.defaults.sparql.endpoint = 'http://127.0.0.1:3030/soch/query';
 YASQE.defaults.value = '';
 YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter', 'customUrisCompleter', 'customServicesCompleter', 'variables'];
 
@@ -23,8 +22,6 @@ YASQE.defaults.sparql.callbacks.error = data => {
   }
   document.querySelector('#queryLoadingIndicator').style.display = 'none';
 }
-
-var yasqe = YASQE(document.getElementById('queryEditor'));
 
 function getSharableURL() {
   return window.location.origin + window.location.pathname + '#query=' + encodeURIComponent(yasqe.getValue());
@@ -290,6 +287,25 @@ function setupQueryLibrary() {
   });
 }
 setupQueryLibrary();
+
+// get endpoint and init
+
+function closeAndSetEndpointModal() {
+  const endpoint = document.querySelector('#endpointInput').value;
+  localStorage.setItem('endpoint', endpoint);
+  yasqe.options.sparql.endpoint = localStorage.getItem('endpoint');
+  window.location.hash = '';
+}
+
+if (localStorage.getItem('endpoint') !== null) {
+  YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
+} else {
+  window.location.hash = 'endpoint-modal';
+}
+
+var yasqe = YASQE(document.getElementById('queryEditor'));
+
+// drag to change editor size logic
 
 const handle = document.querySelector('.handle');
 const container = document.querySelector('#queryEditor');

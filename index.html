@@ -86,6 +86,18 @@
       </div>
     </div>
 
+    <div class="raa-modal-overlay" id="endpoint-modal">
+      <div class="raa-modal" style="max-width: 500px;">
+        <h3 style="margin: 1.5rem .5rem;">Enter Endpoint</h3>
+        <a href="#" class="close"title="Close modal">
+          <img src="assets/close_white_orange.png" aria-hidden="true">
+        </a>
+
+        <input type="url" id="endpointInput" class="m-tb-small m-lr-small raa-input" style="width:483px" placeholder="http://example.com/soch-sparql">
+        <button class="m-tb-small m-lr-small raa-button raa-button-confirm" style="width:483px" onclick="closeAndSetEndpointModal()">Save</button>
+      </div>
+    </div>
+
     <div class="raa-modal-overlay" id="documentation-modal">
       <div class="raa-modal">
         <h2>Documentation</h2>
