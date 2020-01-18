@@ -4,7 +4,7 @@ _An interactive and user friendly SPARQL editor for the Swedish Open Cultural He
 
 ## Features
 
- * Autocompleation of the entire SOCH ontology
+ * Autocompletion of the entire SOCH ontology
  * Result visualizations including a table, an image grid and a pie chart
  * Integration with a query library
  * Shareable queries
