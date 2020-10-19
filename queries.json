@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Query All Properties & Values",
+    "tags": [
+      "meta",
+      "tutorial"
+    ],
+    "body": "SELECT ?subject ?predicate ?object \nWHERE {\n?subject ?predicate ?object\n}"
+  },
+]
