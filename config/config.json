@@ -1,7 +1,13 @@
 {
     "query_library_endpoint": "https://byabbe.se/soch-sparql-query-library/queries.json",
     "header_brand_content": "K-samsök",
-    "demo_tour_query": "PREFIX soch: <http://kulturarvsdata.se/ksamsok#>\n\n    SELECT * WHERE {\n      ?s soch:\n    }",
+    "demo_tour": {
+        "demo_query": "PREFIX soch: <http://kulturarvsdata.se/ksamsok#>\n\n    SELECT * WHERE {\n      ?s soch:\n    }",
+        "demo_query_cursor_position": {
+            "line": 3,
+            "ch": 10
+        }
+    },
     "autocomplete": {
         "classes": [
             "http://kulturarvsdata.se/ksamsok#Context",

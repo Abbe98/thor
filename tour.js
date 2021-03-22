@@ -15,7 +15,6 @@ const btns = [
   }
 ];
 
-const thorDemoAutocompleteQuery = window.thorConfig.demo_tour_query;
 
 tour.addStep('1', {
   title: 'Welcome',
@@ -36,9 +35,12 @@ tour.addStep('2', {
   buttons: btns,
   beforeShowPromise: () => {
     return new Promise(resolve => {
-      yasqe.setValue(thorDemoAutocompleteQuery);
+      yasqe.setValue(window.thorConfig.demo_tour.demo_query);
       yasqe.focus();
-      yasqe.setCursor({line: 3, ch: 10});
+      yasqe.setCursor({
+        line: window.thorConfig.demo_tour.demo_query_cursor_position.line,
+        ch: window.thorConfig.demo_tour.demo_query_cursor_position.ch
+      });
       resolve();
     });
   },
