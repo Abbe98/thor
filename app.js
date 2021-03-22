@@ -54,6 +54,7 @@ function download(evt) {
     downloadElm.download = 'query-result.json';
     downloadElm.click();
   }
+  evt.options[evt.selectedIndex].selected = false;
 }
 
 function flashMessage(message) {
