@@ -4,7 +4,7 @@ const tour = new Shepherd.Tour({
   useModalOverlay: true
 });
 
-const btns =  [
+const btns = [
   {
     text: 'Skip',
     action: tour.cancel
@@ -23,7 +23,7 @@ SELECT * WHERE {
 
 tour.addStep('1', {
   title: 'Welcome',
-  text: 'Welcome to Thor a SPARQL editor for SOCH/K-samsök. Let us show you around to get you started.',
+  text: 'Welcome to this SPARQL editor. Let us show you around to get you started.',
   buttons: btns,
   beforeShowPromise: () => {
     return new Promise(resolve => {
@@ -35,7 +35,7 @@ tour.addStep('1', {
 
 tour.addStep('2', {
   title: 'The Editor',
-  text: 'Not familiar with the SOCH Data Model? No worries our editor auto completes the entire data model as well as common authorities and even federated endpoints.',
+  text: 'Not familiar with the data model of this endpoint? No worries our editor auto completes the entire data model as well as common authorities and even federated endpoints.',
   attachTo: '#queryEditor bottom',
   buttons: btns,
   beforeShowPromise: () => {
@@ -50,7 +50,7 @@ tour.addStep('2', {
 
 tour.addStep('3', {
   title: 'The Query Library',
-  text: 'You can also get started quickly by selecting one of the many preexisting queries in our query library. We even have tutorial queries!',
+  text: 'You can also get started quickly by selecting one of the many preexisting queries in our query library.',
   attachTo: 'a[href="#query-library-modal"] left',
   buttons: btns,
   beforeShowPromise:() => {
@@ -64,7 +64,7 @@ tour.addStep('3', {
 tour.addStep('4', {
   title: 'Visualizations',
   text: 'Thor can visualize query results in other ways then in a table. Take a peek at the documentation to get started.',
-  attachTo: '.raa-input.raa-select right',
+  attachTo: '.thor-input.thor-select right',
   buttons: btns,
 });
 

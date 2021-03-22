@@ -60,7 +60,7 @@ select {
   background: #fff;
 }
 
-.raa-button {
+.thor-button {
   cursor: pointer;
   color: #fff;
   text-transform: uppercase;
@@ -78,19 +78,19 @@ select {
   border: none;
 }
 
-.raa-button-confirm {
+.thor-button-confirm {
   background-color: #008578;
   border-color: #008578;
 }
 
-.raa-button-confirm:hover,
-.raa-button-confirm:active,
-.raa-button-confirm:focus {
+.thor-button-confirm:hover,
+.thor-button-confirm:active,
+.thor-button-confirm:focus {
   background-color: #00786c;
   border-color: #00786c;
 }
 
-.raa-nav {
+.thor-nav {
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: .5rem;
@@ -98,12 +98,12 @@ select {
   background-color: #fff;
 }
 
-.raa-nav ul {
+.thor-nav ul {
   padding: 0;
   float: right;
 }
 
-.raa-nav li {
+.thor-nav li {
   list-style: none;
   display: block;
   float: right;
@@ -111,7 +111,7 @@ select {
   text-transform: uppercase;
 }
 
-.raa-nav a {
+.thor-nav a {
   text-decoration: none;
   color: #6a6a6a;
   margin-left: .5rem;
@@ -121,18 +121,18 @@ select {
   padding-bottom: 4px;
 }
 
-.raa-nav a:hover,
-.raa-nav a:focus,
-.raa-nav a:active,
-.raa-nav a.current {
+.thor-nav a:hover,
+.thor-nav a:focus,
+.thor-nav a:active,
+.thor-nav a.current {
   border-bottom: 2px solid #b54216;
 }
 
-.raa-nav img {
+.thor-nav img {
   height: 50px;
 }
 
-.raa-input {
+.thor-input {
   display: block;
   width: 100%;
   padding: .75rem;
@@ -145,35 +145,35 @@ select {
   box-sizing: border-box;
 }
 
-.raa-select {
+.thor-select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background: transparent url(assets/arrow.png) no-repeat calc(100% - 1rem) center;
 }
 
-.raa-table {
+.thor-table {
   background: white;
   min-width: 100%;
 }
 
-.raa-table tbody tr:nth-of-type(odd) {
+.thor-table tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.raa-table thead th {
+.thor-table thead th {
   vertical-align: bottom;
   border-bottom: 2px solid #eceeef;
 }
 
-.raa-table th,
-.raa-table td {
+.thor-table th,
+.thor-table td {
   padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #eceeef;
 }
 
-.raa-label {
+.thor-label {
   display: inline;
   padding: .2em .6em .3em;
   font-size: 75%;
@@ -187,7 +187,7 @@ select {
   background: #c94a17;
 }
 
-.raa-loading {
+.thor-loading {
   text-align: center;
 }
 
@@ -196,7 +196,7 @@ select {
   100% { transform: rotate(359deg); }
 }
 
-.raa-loading img {
+.thor-loading img {
   animation: 2s linear infinite spinner-spin, .4s ease-in spinner-delayed-fade-in;
   max-width: 7rem;
 }
@@ -215,7 +215,7 @@ select {
   font-size: 5em;
 }
 
-.raa-alert {
+.thor-alert {
   background-color: #c94a17;
   color: #fff;
   padding: .75rem 1.25rem;
@@ -225,7 +225,7 @@ select {
   left: 0;
 }
 
-.raa-modal-overlay {
+.thor-modal-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -240,11 +240,11 @@ select {
   display: none;
 }
 
-.raa-modal-overlay:target {
+.thor-modal-overlay:target {
   display: flex;
 }
 
-.raa-modal {
+.thor-modal {
   z-index: 99997;
   max-width: 900px;
   position: relative;
@@ -254,52 +254,52 @@ select {
   overflow: hidden;
 }
 
-.raa-modal .close {
+.thor-modal .close {
   position: absolute;
   top: 0;
   right: 0;
 }
 
-.raa-modal h2 {
+.thor-modal h2 {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
   margin-left: 2rem;
   margin-right: 2rem;
 }
 
-.raa-modal>div {
+.thor-modal>div {
   padding: 2rem;
   padding-top: 0;
 }
 
-.raa-large-list {
+.thor-large-list {
   padding: 0;
 }
 
-.raa-large-list li {
+.thor-large-list li {
   list-style: none;
 }
 
-.raa-large-list li div {
+.thor-large-list li div {
   border-left: 7px solid #c94a17;
   padding-left: 15px;
   height: 60px;
 }
 
-.raa-large-list li div.interactive {
+.thor-large-list li div.interactive {
   cursor: pointer;
 }
 
-.raa-large-list li div.interactive h3 {
+.thor-large-list li div.interactive h3 {
   color: #c94a17;
 }
 
-.raa-large-list li div.interactive:hover h3 {
+.thor-large-list li div.interactive:hover h3 {
   text-decoration: underline;
   color: #a33b14;
 }
 
-.raa-large-list li div.interactive:hover {
+.thor-large-list li div.interactive:hover {
   color: #a33b14;
   border-color: #a33b14;
 }

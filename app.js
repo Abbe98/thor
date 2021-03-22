@@ -107,7 +107,7 @@ function setResultsLabel(len, max) {
 
 function renderTable() {
   const table = document.createElement('table');
-  table.classList.add(['raa-table']);
+  table.classList.add(['thor-table']);
   table.id = 'resultTable';
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
@@ -284,7 +284,7 @@ function setupQueryLibrary() {
         const span = document.createElement('span');
         const spanText = document.createTextNode(tag);
 
-        span.classList.add('raa-label', 'm-l-small');
+        span.classList.add('thor-label', 'm-l-small');
         span.appendChild(spanText);
         div.appendChild(span);
       });

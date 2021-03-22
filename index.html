@@ -3,36 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Thor SPARQL Editor - K-samsök</title>
+    <title>SPARQL Editor</title>
 
     <link href="libs/yasqe.min.css" rel="stylesheet">
     <script src="libs/yasqe.bundled.min.js"></script>
 
     <link href="style.css" rel="stylesheet">
-
-    <!-- generics -->
-    <link rel="icon" href="assets/favicon/raa-favicon-32.png" sizes="32x32">
-    <link rel="icon" href="assets/favicon/raa-favicon-57.png" sizes="57x57">
-    <link rel="icon" href="assets/favicon/raa-favicon-76.png" sizes="76x76">
-    <link rel="icon" href="assets/favicon/raa-favicon-96.png" sizes="96x96">
-    <link rel="icon" href="assets/favicon/raa-favicon-128.png" sizes="128x128">
-    <link rel="icon" href="assets/favicon/raa-favicon-228.png" sizes="228x228">
-
-    <!-- Android -->
-    <link rel="shortcut icon" sizes="196x196" href="assets/favicon/raa-favicon-196.png">
-
-    <!-- iOS -->
-    <link rel="apple-touch-icon" href="assets/favicon/raa-favicon-120.png" sizes="120x120">
-    <link rel="apple-touch-icon" href="assets/favicon/raa-favicon-152.png" sizes="152x152">
-    <link rel="apple-touch-icon" href="assets/favicon/raa-favicon-180.png" sizes="180x180">
-
-    <!-- Windows 8 IE 10-->
-    <meta name="msapplication-TileColor" content="#FFFFFF">
-    <meta name="msapplication-TileImage" content="assets/favicon/raa-favicon-144.png">
   </head>
   <body>
-    <nav class="raa-nav m-b-small">
-      <h1 style="width: 50px;display: inline-block;margin-top: .7em;margin-bottom: 0;">K-samsök</h1>
+    <nav class="thor-nav m-b-small">
+      <h1 style="width: 50px;display: inline-block;margin-top: .7em;margin-bottom: 0;">Editor</h1>
       <!--<img src="assets/soch-logo.svg">-->
       <ul>
         <li><a href="#query-library-modal">Query Library</a></li>
@@ -48,59 +28,59 @@
     </div>
 
     <div>
-      <select class="raa-input raa-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="setRenderMode(this)">
+      <select class="thor-input thor-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="setRenderMode(this)">
         <option value="table">Table</option>
         <option value="pie">Pie Chart</option>
         <option value="images">Image Grid</option>
       </select>
-      <select class="raa-input raa-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="download(this)">
+      <select class="thor-input thor-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="download(this)">
         <option>Download as</option>
         <option value="json">JSON</option>
         <option value="csv">CSV</option>
       </select>
 
       <div class="float-right">
-        <span style="display: none; margin-top: 17px;" id="result-label" class="raa-label float-left"></span>
-        <button class="raa-button raa-button-confirm float-right m-tb-small m-lr-small" onclick="yasqe.query()">Execute</button>
+        <span style="display: none; margin-top: 17px;" id="result-label" class="thor-label float-left"></span>
+        <button class="thor-button thor-button-confirm float-right m-tb-small m-lr-small" onclick="yasqe.query()">Execute</button>
       </div>
     </div>
 
     <div class="results float-left m-lr-small" id="resultContainer" style="width: calc(100% - 1rem)"></div>
 
-    <div class="raa-loading" id="queryLoadingIndicator" style="display: none;">
+    <div class="thor-loading" id="queryLoadingIndicator" style="display: none;">
       <img src="assets/loading.svg" />
     </div>
 
     <a id="download" download style="display:none"></a>
 
-    <p class="raa-alert" id="messageContainer" style="display: none;"></p>
+    <p class="thor-alert" id="messageContainer" style="display: none;"></p>
 
-    <div class="raa-modal-overlay" id="share-modal">
-      <div class="raa-modal" style="max-width: 500px;">
+    <div class="thor-modal-overlay" id="share-modal">
+      <div class="thor-modal" style="max-width: 500px;">
         <h3 style="margin: 1.5rem .5rem;">Shareable URL</h3>
         <a href="#" class="close"title="Close modal">
           <img src="assets/close_white_orange.png" aria-hidden="true">
         </a>
 
-        <input type="url" readonly id="shareURLInput" class="m-tb-small m-lr-small raa-input" style="width:483px" onfocus="this.select();">
-        <button class="m-tb-small m-lr-small raa-button raa-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
+        <input type="url" readonly id="shareURLInput" class="m-tb-small m-lr-small thor-input" style="width:483px" onfocus="this.select();">
+        <button class="m-tb-small m-lr-small thor-button thor-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
       </div>
     </div>
 
-    <div class="raa-modal-overlay" id="endpoint-modal">
-      <div class="raa-modal" style="max-width: 500px;">
+    <div class="thor-modal-overlay" id="endpoint-modal">
+      <div class="thor-modal" style="max-width: 500px;">
         <h3 style="margin: 1.5rem .5rem;">Enter Endpoint</h3>
         <a href="#" class="close"title="Close modal">
           <img src="assets/close_white_orange.png" aria-hidden="true">
         </a>
 
-        <input type="url" id="endpointInput" class="m-tb-small m-lr-small raa-input" style="width:483px" placeholder="http://example.com/soch-sparql">
-        <button class="m-tb-small m-lr-small raa-button raa-button-confirm" style="width:483px" onclick="closeAndSetEndpointModal()">Save</button>
+        <input type="url" id="endpointInput" class="m-tb-small m-lr-small thor-input" style="width:483px" placeholder="http://example.com/soch-sparql">
+        <button class="m-tb-small m-lr-small thor-button thor-button-confirm" style="width:483px" onclick="closeAndSetEndpointModal()">Save</button>
       </div>
     </div>
 
-    <div class="raa-modal-overlay" id="documentation-modal">
-      <div class="raa-modal">
+    <div class="thor-modal-overlay" id="documentation-modal">
+      <div class="thor-modal">
         <h2>Documentation</h2>
 
         <a href="#" class="close"title="Close modal">
@@ -115,7 +95,7 @@
           </ul>
 
           <h3>Using Visualizations</h3>
-          <p>Thor has several built in visualizations in addition to the default table view. They can all be used by specifying specific variables described below.</p>
+          <p>This SPARQL has several built in visualizations in addition to the default table view. They can all be used by specifying specific variables described below.</p>
 
           <h4>Image Grid</h4>
           <p>The image grid requires only one variable. <var>?thumbnail</var> should be an image URL invalid image URLs within this variable will be ignored. Note that if you are running Thor over HTTPS images will need to be served over HTTPS as well. The image grid will only render the first 100 images.</p>
@@ -124,7 +104,7 @@
           <p>The pie chart requires two variables. <var>?count</var> should be a numeric value. <var>?label</var> should be a literal.</p>
 
           <h3>Keyboard Shortcuts</h3>
-          <table class="raa-table">
+          <table class="thor-table">
             <thead>
               <tr>
                 <th>Shortcut</th>
@@ -160,13 +140,13 @@
           </table>
 
           <h3>Contribute</h3>
-          <p>This SPARQL Editor is Open Source and you can report issues as well as contributing code through <a href="https://github.com/Abbe98/thor">Github</a>. You can also contribute to the Query Library by improving or adding new queries through the <a href="https://github.com/Abbe98/soch-sparql-query-library">Query Library repository</a>.</p>
+          <p>This SPARQL Editor is built upon Thor which is open source and you can report issues through <a href="https://github.com/Abbe98/thor">Github</a>.</p>
         </div>
       </div>
     </div>
 
-    <div class="raa-modal-overlay" id="query-library-modal">
-      <div class="raa-modal">
+    <div class="thor-modal-overlay" id="query-library-modal">
+      <div class="thor-modal">
         <h2>Query Library</h2>
 
         <a href="#" class="close"title="Close modal">
@@ -174,7 +154,7 @@
         </a>
 
         <div>
-          <ul id="query-library-container" class="raa-large-list"></ul>
+          <ul id="query-library-container" class="thor-large-list"></ul>
         </div>
       </div>
     </div>
