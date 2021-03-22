@@ -1,0 +1,13 @@
+{
+    "sparql_endpoint": "",
+    "query_library_endpoint": "",
+    "header_brand_content": "",
+    "demo_tour_query": "",
+    "autocomplete": {
+        "classes": [],
+        "prefixes": [],
+        "properties": [],
+        "services": [],
+        "uris": []
+    }
+}

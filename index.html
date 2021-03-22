@@ -12,8 +12,7 @@
   </head>
   <body>
     <nav class="thor-nav m-b-small">
-      <h1 style="width: 50px;display: inline-block;margin-top: .7em;margin-bottom: 0;">Editor</h1>
-      <!--<img src="assets/soch-logo.svg">-->
+      <h1 id="brandHeader" style="display: inline-block;margin-top: .7em;margin-bottom: 0;">Editor</h1>
       <ul>
         <li><a href="#query-library-modal">Query Library</a></li>
         <li><a href="#documentation-modal">Documentation</a></li>
@@ -160,16 +159,17 @@
     </div>
 
     <script src="libs/d3.v5.min.js"></script>
+    <script src="libs/shepherd.min.js"></script>
     <script src="autocompleters/prefixes.js"></script>
     <script src="autocompleters/properties.js"></script>
     <script src="autocompleters/classes.js"></script>
     <script src="autocompleters/uris.js"></script>
     <script src="autocompleters/services.js"></script>
     <script src="app.js"></script>
+    <script src="tour.js"></script>
+    <script src="config-loader.js"></script>
 
     <link rel="stylesheet" href="libs/shepherd-theme-default.css"/>
     <link rel="stylesheet" href="tour.css"/>
-    <script src="libs/shepherd.min.js"></script>
-    <script src="tour.js"></script>
   </body>
 </html>

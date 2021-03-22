@@ -266,7 +266,7 @@ function render() {
 
 
 function setupQueryLibrary() {
-  fetch('https://byabbe.se/soch-sparql-query-library/queries.json').then(response => {
+  fetch(window.thorConfig.query_library_endpoint).then(response => {
     return response.json();
   }).then(data => {
     data.forEach(query => {
@@ -300,10 +300,9 @@ function setupQueryLibrary() {
     });
   });
 }
-setupQueryLibrary();
 
 
-// get endpoint and init
+// get endpoint
 
 function closeAndSetEndpointModal() {
   const endpoint = document.querySelector('#endpointInput').value;
@@ -314,11 +313,19 @@ function closeAndSetEndpointModal() {
 
 if (localStorage.getItem('endpoint') !== null) {
   YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
+} else if (window.thorConfig.sparql_endpoint) {
+  YASQE.defaults.sparql.endpoint = window.thorConfig.sparql_endpoint;
 } else {
   window.location.hash = 'endpoint-modal';
 }
 
-var yasqe = YASQE(document.getElementById('queryEditor'));
+// main init called by the config loader
+
+var yasqe;
+function init() {
+  yasqe = YASQE(document.getElementById('queryEditor'));
+  setupQueryLibrary();
+}
 
 // drag to change editor size logic
 

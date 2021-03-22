@@ -1,12 +1,3 @@
-const uris = [
-  'http://kulturarvsdata.se/',
-  'http://viaf.org/viaf/',
-  'http://www.wikidata.org/entity/',
-  'http://data.europeana.eu/item/',
-  'http://kulturnav.org/',
-  'http://sws.geonames.org/',
-];
-
 const customUrisCompleter = function(yasqe) {
   let completer = {
     isValidCompletionPosition: () => {
@@ -28,7 +19,7 @@ const customUrisCompleter = function(yasqe) {
   completer.autoShow = true;
 
   completer.persistent = false;
-  completer.get = () => uris;
+  completer.get = () => window.thorConfig.autocomplete.uris;
 
   return completer;
 };

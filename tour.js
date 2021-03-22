@@ -15,11 +15,7 @@ const btns = [
   }
 ];
 
-const thorDemoAutocompleteQuery = `PREFIX soch: <http://kulturarvsdata.se/ksamsok#>
-
-SELECT * WHERE {
-  ?s soch:
-}`;
+const thorDemoAutocompleteQuery = window.thorConfig.demo_tour_query;
 
 tour.addStep('1', {
   title: 'Welcome',
@@ -81,7 +77,3 @@ tour.addStep('5', {
   attachTo: 'a[href="#documentation-modal"] left',
   buttons: btns,
 });
-
-if (!store.getItem('hasStartedTour')) {
-  tour.start();
-}

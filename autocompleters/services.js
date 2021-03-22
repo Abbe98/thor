@@ -1,13 +1,3 @@
-const services = [
-  'https://query.wikidata.org/bigdata/namespace/wdq/sparql',
-  'http://libris.kb.se/sparql',
-  'http://sparql.europeana.eu/',
-  'http://dbpedia.org/sparql',
-  'http://vocab.getty.edu/sparql.json',
-  'http://tools.wmflabs.org/mw2sparql/sparql',
-  'https://sophox.org/sparql',
-];
-
 const customServicesCompleter = function(yasqe) {
   let completer = {
     isValidCompletionPosition: () => {
@@ -24,7 +14,7 @@ const customServicesCompleter = function(yasqe) {
   completer.autoShow = true;
 
   completer.persistent = false;
-  completer.get = () => services;
+  completer.get = () => window.thorConfig.autocomplete.services;
 
   return completer;
 };
