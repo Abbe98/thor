@@ -301,9 +301,6 @@ function setupQueryLibrary() {
   });
 }
 
-
-// get endpoint
-
 function closeAndSetEndpointModal() {
   const endpoint = document.querySelector('#endpointInput').value;
   localStorage.setItem('endpoint', endpoint);
@@ -311,18 +308,18 @@ function closeAndSetEndpointModal() {
   window.location.hash = '';
 }
 
-if (localStorage.getItem('endpoint') !== null) {
-  YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
-} else if (window.thorConfig.sparql_endpoint) {
-  YASQE.defaults.sparql.endpoint = window.thorConfig.sparql_endpoint;
-} else {
-  window.location.hash = 'endpoint-modal';
-}
-
 // main init called by the config loader
 
 var yasqe;
 function init() {
+  if (localStorage.getItem('endpoint') !== null) {
+    YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
+  } else if (window.thorConfig.sparql_endpoint) {
+    YASQE.defaults.sparql.endpoint = window.thorConfig.sparql_endpoint;
+  } else {
+    window.location.hash = 'endpoint-modal';
+  }
+
   yasqe = YASQE(document.getElementById('queryEditor'));
   setupQueryLibrary();
 }
