@@ -48,10 +48,23 @@ function clearResults() {
 
 function download(evt) {
   const format = evt.options[evt.selectedIndex].value;
+  const downloadElm = document.querySelector('#download');
   if (format === 'json' && rawResponseData) {
-    const downloadElm = document.querySelector('#download');
     downloadElm.href = window.URL.createObjectURL(new Blob([JSON.stringify(rawResponseData)], { type: 'application/json' }));
     downloadElm.download = 'query-result.json';
+    downloadElm.click();
+  } else if (format == 'csv') {
+    let csvString = '';
+    csvString += '"' + rawResponseData.head.vars.join('","') + '"\n';
+    rawResponseData.results.bindings.forEach(row => {
+      let rowKeyValues = [];
+      Object.keys(row).forEach(key => {
+        rowKeyValues.push(row[key].value);
+      });
+      csvString += '"' + rowKeyValues.join('","') + '"\n';
+    });
+    downloadElm.href = window.URL.createObjectURL(new Blob([csvString], { type: 'text/csv' }));
+    downloadElm.download = 'query-result.csv';
     downloadElm.click();
   }
   evt.options[evt.selectedIndex].selected = false;
