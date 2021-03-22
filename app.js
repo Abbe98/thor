@@ -290,8 +290,6 @@ function setupQueryLibrary() {
 setupQueryLibrary();
 
 
-var yasqe = YASQE(document.getElementById('queryEditor'));
-
 // get endpoint and init
 
 function closeAndSetEndpointModal() {
@@ -306,6 +304,8 @@ if (localStorage.getItem('endpoint') !== null) {
 } else {
   window.location.hash = 'endpoint-modal';
 }
+
+var yasqe = YASQE(document.getElementById('queryEditor'));
 
 // drag to change editor size logic
 
