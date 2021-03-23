@@ -8,6 +8,18 @@
             "ch": 10
         }
     },
+    "color_scheme": {
+        "main_brand": "#C94A18",
+        "main_brand_darkened": "#A33B14",
+        "secondary_brand": "#008578",
+        "secondary_brand_darkened": "#00786C",
+        "main_text": "#3A3A3A",
+        "main_text_lighted": "#6A6A6A",
+        "secondary_text": "#FFFFFF",
+        "background": "#FFFFFF",
+        "background_shaded": "#ECEEEF",
+        "border": "#DADADA"
+    },
     "autocomplete": {
         "classes": [
             "http://kulturarvsdata.se/ksamsok#Context",

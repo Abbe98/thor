@@ -1,3 +1,18 @@
+:root {
+  --main-brand: #C94A18;
+  --main-brand-darkened: #A33B14;
+  --secondary-brand: #008578;
+  --secondary-brand-darkened: #00786C;
+
+  --main-text: #3A3A3A;
+  --main-text-lighted: #6A6A6A;
+  --secondary-text: #FFFFFF;
+
+  --background: #FFFFFF;
+  --background-shaded: #ECEEEF;
+  --border: #DADADA;
+}
+
 .yasqe_buttons {
   display: none;
 }
@@ -6,9 +21,9 @@ body {
   font-size: 1rem;
   font-weight: normal;
   font-family: 'Source Sans Pro', sans-serif;
-  color: #3a3a3a;
+  color: var(--main-text);
   letter-spacing: normal;
-  background: #FBFBFB;
+  background: var(--background);
   margin: 0;
   min-height: 100vh;
 }
@@ -32,7 +47,7 @@ p {
 
 a {
   display: inline-block;
-  color: #c94a18;
+  color: var(--main-brand);
   text-decoration: underline;
   cursor: pointer;
   transition: all .4s;
@@ -40,14 +55,10 @@ a {
   text-decoration-color: transparent;
 }
 
-a:active {
-  color: #a33b14;
-  border-color: #a33b14;
-}
-
+a:active,
 a:hover {
-  color: #b54216;
-  text-decoration-color: #b54216;
+  color: var(--main-brand-darkened);
+  border-color: var(--main-brand-darkened);
 }
 
 button,
@@ -57,12 +68,12 @@ select {
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
-  background: #fff;
+  background: var(--background);
 }
 
 .thor-button {
   cursor: pointer;
-  color: #fff;
+  color: var(--secondary-text);
   text-transform: uppercase;
   font-size: 1rem;
   font-weight: 600;
@@ -79,15 +90,15 @@ select {
 }
 
 .thor-button-confirm {
-  background-color: #008578;
-  border-color: #008578;
+  background-color: var(--secondary-brand-darkened);
+  border-color: var(--secondary-brand-darkened);
 }
 
 .thor-button-confirm:hover,
 .thor-button-confirm:active,
 .thor-button-confirm:focus {
-  background-color: #00786c;
-  border-color: #00786c;
+  background-color: var(--secondary-brand);
+  border-color: var(--secondary-brand);
 }
 
 .thor-nav {
@@ -95,7 +106,7 @@ select {
   padding-right: 1rem;
   padding-top: .5rem;
   padding-bottom: .5rem;
-  background-color: #fff;
+  background-color: var(--background);
 }
 
 .thor-nav ul {
@@ -113,7 +124,7 @@ select {
 
 .thor-nav a {
   text-decoration: none;
-  color: #6a6a6a;
+  color: var(--main-text-lighted);
   margin-left: .5rem;
   margin-right: .5rem;
   padding-left: .5rem;
@@ -125,7 +136,7 @@ select {
 .thor-nav a:focus,
 .thor-nav a:active,
 .thor-nav a.current {
-  border-bottom: 2px solid #b54216;
+  border-bottom: 2px solid var(--main-brand);
 }
 
 .thor-nav img {
@@ -139,9 +150,9 @@ select {
   height: 2.5rem;
   border-width: 1px;
   border-style: solid;
-  border-color: #dadada;
+  border-color: var(--border);
   border-radius: 2px;
-  background-color: #fff;
+  background-color: var(--background);
   box-sizing: border-box;
 }
 
@@ -153,7 +164,7 @@ select {
 }
 
 .thor-table {
-  background: white;
+  background: var(--background);
   min-width: 100%;
 }
 
@@ -163,14 +174,14 @@ select {
 
 .thor-table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #eceeef;
+  border-bottom: 2px solid var(--background-shaded);
 }
 
 .thor-table th,
 .thor-table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #eceeef;
+  border-top: 1px solid var(--background-shaded);
 }
 
 .thor-label {
@@ -179,12 +190,12 @@ select {
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
+  color: var(--secondary-text);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: 2px;
-  background: #c94a17;
+  background: var(--main-brand);
 }
 
 .thor-loading {
@@ -216,8 +227,8 @@ select {
 }
 
 .thor-alert {
-  background-color: #c94a17;
-  color: #fff;
+  background-color: var(--main-brand);
+  color: var(--secondary-text);
   padding: .75rem 1.25rem;
   position: fixed;
   bottom: 0;
@@ -250,7 +261,7 @@ select {
   position: relative;
   flex: 1;
   border-radius: 2px;
-  background-color: #fff;
+  background-color: var(--background);
   overflow: hidden;
 }
 
@@ -281,7 +292,7 @@ select {
 }
 
 .thor-large-list li div {
-  border-left: 7px solid #c94a17;
+  border-left: 7px solid var(--main-brand);
   padding-left: 15px;
   height: 60px;
 }
@@ -291,17 +302,17 @@ select {
 }
 
 .thor-large-list li div.interactive h3 {
-  color: #c94a17;
+  color: var(--main-brand);
 }
 
 .thor-large-list li div.interactive:hover h3 {
   text-decoration: underline;
-  color: #a33b14;
+  color: var(--main-brand-darkened);
 }
 
 .thor-large-list li div.interactive:hover {
-  color: #a33b14;
-  border-color: #a33b14;
+  color: var(--main-brand-darkened);
+  border-color: var(--main-brand-darkened);
 }
 
 .share-btn {
@@ -312,11 +323,11 @@ select {
 }
 
 .handle {
-  background: #f7f7f7;
+  background: var(--background-shaded);
   height: 25px;
   user-select: none;
   cursor: row-resize;
-  border: 1px solid #dadada;
+  border: 1px solid var(--border);
   text-align: center;
   margin: auto;
   margin-top: auto;
@@ -328,6 +339,25 @@ select {
   left: calc(50% - 25px);
   line-height: 25px;
 }
+
+/* tour */
+
+.shepherd-text {
+  text-align: left !important;
+}
+
+.shepherd-element .shepherd-content footer .shepherd-buttons li .shepherd-button {
+  background-color: var(--secondary-brand) !important;
+  border-color: var(--secondary-brand) !important;
+  border-radius: 2px !important;
+}
+
+.shepherd-element .shepherd-content footer .shepherd-buttons li .shepherd-button:hover {
+  text-decoration: none !important;
+  background-color: var(--secondary-brand-darkened) !important;
+  border-color: var(--secondary-brand-darkened) !important;
+}
+
 
 /* UTILITIES */
 
