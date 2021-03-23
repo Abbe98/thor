@@ -1,6 +1,6 @@
 # Thor SPARQL Editor
 
-_A platform-agnostic, configurable, and brandable SPARQL editor and visualization interface. _
+_A platform-agnostic, configurable, and brandable SPARQL editor and visualization interface._
 
 ## Features
 
