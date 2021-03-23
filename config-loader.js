@@ -17,7 +17,7 @@ fetch('config/config.json').then(response => {
     colors.background_shaded ? setColor('--background-shaded', colors.background_shaded) : undefined;
     colors.border ? setColor('--border', colors.border) : undefined;
 
-    if (!store.getItem('hasStartedTour')) {
+    if (window.thorConfig.demo_tour && !store.getItem('hasStartedTour')) {
         tour.start();
     }
     init();
