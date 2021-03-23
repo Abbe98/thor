@@ -1,18 +1,32 @@
 # Thor SPARQL Editor
 
-_An interactive and user friendly SPARQL editor for the Swedish Open Cultural Heritage LOD platform._
+_A platform-agnostic, configurable, and brandable SPARQL editor and visualization interface. _
 
 ## Features
 
- * Autocompletion of the entire SOCH ontology
- * Result visualizations including a table, an image grid and a pie chart
- * Integration with a query library
+ * Autocompletion of your entire ontology
+ * Result visualizations including a table, an image grid, and a pie chart
+ * Integration with your query library
  * Shareable queries
  * A resizable code editor
- * A interactive tour of the GUI
+ * An interactive tour of the GUI
  * _...and plenty of others..._
 
-## What Thor isn't
+## Configuration / Setup
 
- * A project from the Swedish National Heritage Board
- * A SPARQL backend
+In Thor you can configure:
+
+ * the SPARQL endpoint
+ * a custom query library endpoint
+ * the name of your editor
+ * the color scheme
+ * the demo tour
+ * autocompletion of classes, prefixes, properties, federated services, URIs
+
+[An almost complete configuration example is available in this repository.](https://github.com/Abbe98/thor/blob/master/config/config.json)
+
+Notes on configuration:
+
+ * leaving `sparql_endpoint` out will enable the user to input their own endpoint.
+ * leaving out `demo_tour` will disable the feature tour.
+ * `header_brand_content` can take HTML code.

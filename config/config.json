@@ -1,4 +1,5 @@
 {
+    "sparql_endpoint": false,
     "query_library_endpoint": "https://byabbe.se/soch-sparql-query-library/queries.json",
     "header_brand_content": "K-samsök",
     "demo_tour": {
