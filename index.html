@@ -31,6 +31,7 @@
         <option value="table">Table</option>
         <option value="pie">Pie Chart</option>
         <option value="images">Image Grid</option>
+        <option value="map">Map</option>
       </select>
       <select class="thor-input thor-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="download(this)">
         <option>Download as</option>
@@ -102,6 +103,13 @@
           <h4>Pie Chart</h4>
           <p>The pie chart requires two variables. <var>?count</var> should be a numeric value. <var>?label</var> should be a literal.</p>
 
+          <h4>Map</h4>
+          <p>The map requires two variables. <var>?lat</var> and <var>?lon</var> both should be numeric. Three optional variables are also avaible: <ul>
+            <li><var>?markerColor</var>: Literal with a valid CSS color.</li>
+            <li><var>?markerRadius</var>: Numeric value defining the maker size in pixels.</li>
+            <li><var>?markerOpacity</var>: Numeric 0-1 defining the opacity of the marker.</li>
+          </ul></p>
+
           <h3>Keyboard Shortcuts</h3>
           <table class="thor-table">
             <thead>
@@ -160,6 +168,7 @@
 
     <script src="libs/d3.v5.min.js"></script>
     <script src="libs/shepherd.min.js"></script>
+    <script src="libs/leaflet/leaflet.js"></script>
     <script src="autocompleters/prefixes.js"></script>
     <script src="autocompleters/properties.js"></script>
     <script src="autocompleters/classes.js"></script>
@@ -170,5 +179,6 @@
     <script src="config-loader.js"></script>
 
     <link rel="stylesheet" href="libs/shepherd-theme-default.css"/>
+    <link rel="stylesheet" href="libs/leaflet/leaflet.css"/>
   </body>
 </html>

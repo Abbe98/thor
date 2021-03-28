@@ -165,6 +165,30 @@ function renderImages() {
   document.querySelector('#resultContainer').appendChild(container);
 }
 
+function renderMap() {
+  const mapContainer = document.createElement('div');
+  mapContainer.id = 'map';
+  document.querySelector('#resultContainer').appendChild(mapContainer);
+  mapContainer.style.height = '600px';
+
+  const map = L.map('map').setView([0, 0], 1);;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  rawResponseData.results.bindings.forEach(item => {
+    const markerColor = (item['markerColor']) ? item['markerColor'].value : '#f03';
+    const markerRadius = (item['markerRadius']) ? parseInt(item['markerRadius'].value) : 4;
+    const markerOpacity = (item['markerOpacity']) ? parseFloat(item['markerOpacity'].value) : 1;
+
+    new L.CircleMarker(new L.latLng(item['lat'].value, item['lon'].value), {
+      color: markerColor,
+      radius: markerRadius,
+      fillOpacity: markerOpacity,
+    }).addTo(map);
+  });
+}
+
 function renderPieChart() {
   const data = rawResponseData.results.bindings.map(data => {
     return {
@@ -257,6 +281,13 @@ function render() {
       renderPieChart();
     } else {
       flashMessage('Could not render Pie chart. Missing variables "count"/"label".');
+      renderTable();
+    }
+  } else if (renderMode === 'map') {
+    if (rawResponseData.head.vars.includes('lat') && rawResponseData.head.vars.includes('lon')) {
+      renderMap();
+    } else {
+      flashMessage('Could not render Map. Missing variables "lat"/"lon".');
       renderTable();
     }
   } else {

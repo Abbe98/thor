@@ -5,7 +5,7 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
 ## Features
 
  * Autocompletion of your entire ontology
- * Result visualizations including a table, an image grid, and a pie chart
+ * Result visualizations modes including a table, an image grid, a pie chart and a map
  * Integration with your query library
  * Shareable queries
  * A resizable code editor
