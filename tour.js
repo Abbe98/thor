@@ -30,7 +30,7 @@ tour.addStep('1', {
 
 tour.addStep('2', {
   title: 'The Editor',
-  text: 'Not familiar with the data model of this endpoint? No worries our editor auto completes the entire data model as well as common authorities and even federated endpoints.',
+  text: 'Not familiar with the data model of this endpoint? No worries our editor autocompletes the entire data model as well as common authorities and even federated endpoints.',
   attachTo: '#queryEditor bottom',
   buttons: btns,
   beforeShowPromise: () => {
@@ -61,7 +61,7 @@ tour.addStep('3', {
 
 tour.addStep('4', {
   title: 'Visualizations',
-  text: 'Thor can visualize query results in other ways then in a table. Take a peek at the documentation to get started.',
+  text: 'Thor can visualize query results in other ways than in a table. Take a peek at the documentation to get started.',
   attachTo: '.thor-input.thor-select right',
   buttons: btns,
 });
