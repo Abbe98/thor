@@ -157,7 +157,7 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: transparent url(assets/arrow.png) no-repeat calc(100% - 1rem) center;
+  background: transparent url(assets/expand_more.svg) no-repeat calc(100% - 1rem) center;
 }
 
 .thor-table {
