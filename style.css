@@ -144,6 +144,7 @@ select {
 .thor-input {
   display: block;
   width: 100%;
+  min-width: 200px;
   padding: .75rem;
   border-width: 1px;
   border-style: solid;
@@ -357,6 +358,18 @@ select {
 
 
 /* UTILITIES */
+
+.flex {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.center-items {
+  align-items: center;
+}
 
 .m-lr-small {
   margin-left: .5rem;

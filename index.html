@@ -26,22 +26,24 @@
       <div class="handle">≡</div>
     </div>
 
-    <div>
-      <select class="thor-input thor-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="setRenderMode(this)">
-        <option value="table">Table</option>
-        <option value="pie">Pie Chart</option>
-        <option value="images">Image Grid</option>
-        <option value="map">Map</option>
-      </select>
-      <select class="thor-input thor-select float-left m-tb-small m-lr-small" style="max-width: 200px;" onchange="download(this)">
-        <option>Download as</option>
-        <option value="json">JSON</option>
-        <option value="csv">CSV</option>
-      </select>
+    <div class="flex space-between">
+      <div class="flex">
+        <select class="thor-input thor-select m-tb-small m-lr-small" onchange="setRenderMode(this)">
+          <option value="table">Table</option>
+          <option value="pie">Pie Chart</option>
+          <option value="images">Image Grid</option>
+          <option value="map">Map</option>
+        </select>
+        <select class="thor-input thor-select m-tb-small m-lr-small" onchange="download(this)">
+          <option>Download as</option>
+          <option value="json">JSON</option>
+          <option value="csv">CSV</option>
+        </select>
+      </div>
 
-      <div class="float-right">
-        <span style="display: none; margin-top: 17px;" id="result-label" class="thor-label float-left"></span>
-        <button class="thor-button thor-button-confirm float-right m-tb-small m-lr-small" onclick="yasqe.query()">Execute</button>
+      <div class="flex center-items">
+        <span style="display: none;" id="result-label" class="thor-label"></span>
+        <button class="thor-button thor-button-confirm m-tb-small m-lr-small" onclick="yasqe.query()">Execute</button>
       </div>
     </div>
 
