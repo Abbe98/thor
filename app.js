@@ -75,7 +75,7 @@ function flashMessage(message) {
   document.querySelector('#messageContainer').style.display = 'block';
   setTimeout(() => {
     document.querySelector('#messageContainer').style.display = 'none';
-  }, 5000);
+  }, 10000);
 }
 
 function getURIMarkup(yasqe, uri) {
