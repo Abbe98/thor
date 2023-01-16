@@ -16,9 +16,11 @@ YASQE.defaults.sparql.callbacks.beforeSend = () => {
 
 YASQE.defaults.sparql.callbacks.error = data => {
   if (data.status == 400) {
-    flashMessage('400 Bad Request: Your SPARQL likely contains an error.')
+    flashMessage('400 Bad Request: Your SPARQL likely contains an error.');
+    renderError(data.responseText);
   } else {
     flashMessage('Request failed for an unknown reason.');
+    renderError(data.responseText);
   }
   document.querySelector('#queryLoadingIndicator').style.display = 'none';
 }
@@ -243,6 +245,13 @@ function renderPieChart() {
     .attr('x', 0)
     .attr('y', '-0.7em')
     .text(d => d.data.label);
+}
+
+ function renderError(errorText) {
+  const pre = document.createElement('pre');
+  const text = document.createTextNode(errorText);
+  pre.appendChild(text);
+  document.querySelector('#resultContainer').appendChild(pre);
 }
 
 let renderMode = 'table';

@@ -214,6 +214,10 @@ select {
   overflow-x: scroll;
 }
 
+.results pre {
+  white-space: pre-wrap;
+}
+
 .results #resultImages img {
   max-height: 400px;
 }
