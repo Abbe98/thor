@@ -45,6 +45,12 @@ p {
   margin: 0;
 }
 
+#brandHeader {
+  display: inline-block;
+  margin: 0;
+  line-height: 50px;
+}
+
 a {
   display: inline-block;
   color: var(--main-brand);
@@ -389,11 +395,6 @@ select {
 .m-l-small {
   margin-left: .5rem;
 }
-
-.m-b-small {
-  margin-bottom: .5rem;
-}
-
 .float-right {
   float: right;
 }
