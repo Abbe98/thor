@@ -206,7 +206,7 @@ select {
 }
 
 .thor-loading img {
-  animation: 2s linear infinite spinner-spin, .4s ease-in spinner-delayed-fade-in;
+  animation: 3s linear infinite spinner-spin, .4s ease-in spinner-delayed-fade-in;
   max-width: 7rem;
 }
 
