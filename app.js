@@ -361,7 +361,8 @@ function init() {
   }
 
   yasqe = YASQE(document.getElementById('queryEditor'));
-  setupQueryLibrary();
+
+  window.thorConfig.setupQueryLibrary ? setupQueryLibrary() : document.querySelector('a[href="#query-library-modal"]').parentElement.remove();
 }
 
 // drag to change editor size logic
