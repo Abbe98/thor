@@ -128,6 +128,7 @@ select {
   padding-left: .5rem;
   padding-right: .5rem;
   padding-bottom: 4px;
+  transition: none;
 }
 
 .thor-nav a:hover,
