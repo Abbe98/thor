@@ -9,6 +9,18 @@
             "ch": 1
         }
     },
+    "color_scheme": {
+        "main_brand": "",
+        "main_brand_darkened": "",
+        "secondary_brand": "",
+        "secondary_brand_darkened": "",
+        "main_text": "",
+        "main_text_lighted": "",
+        "secondary_text": "",
+        "background": "",
+        "background_shaded": "",
+        "border": ""
+    },
     "autocomplete": {
         "classes": [],
         "prefixes": [],
