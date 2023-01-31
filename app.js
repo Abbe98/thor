@@ -173,9 +173,12 @@ function renderMap() {
   document.querySelector('#resultContainer').appendChild(mapContainer);
   mapContainer.style.height = '600px';
 
+  const tileURL = window.thorConfig.map_background && window.thorConfig.map_background.url_template ? window.thorConfig.map_background.url_template : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  const mapAttribution = window.thorConfig.map_background && window.thorConfig.map_background.attribution ? window.thorConfig.map_background.attribution : '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+
   const map = L.map('map').setView([0, 0], 1);;
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  L.tileLayer(tileURL, {
+    attribution: mapAttribution,
   }).addTo(map);
 
   rawResponseData.results.bindings.forEach(item => {

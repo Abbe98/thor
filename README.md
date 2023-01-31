@@ -29,6 +29,10 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
             "ch": 1
         }
     },
+    "map_background": {
+        "url_template": "",
+        "attribution": ""
+    },
     "color_scheme": {
         "main_brand": "",
         "main_brand_darkened": "",
@@ -71,6 +75,13 @@ An object for the demo tour configuration. If left out, the demo tour will be di
  - `demo_query_cursor_position`: The cursor position to use for the demo tour.
     - `line`: The line number for the cursor position.
     - `ch`: The character number for the cursor position.
+
+### `map_background`
+
+Optional map background settings.
+
+ - `url_template`: URL template for map tiles. [See URL template at leafletjs.com](https://leafletjs.com/reference.html#tilelayer).
+ - `attribution`: String to use for map attribution, can take HTML.
 
 ### `autocomplete`
 

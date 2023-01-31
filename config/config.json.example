@@ -9,6 +9,10 @@
             "ch": 1
         }
     },
+    "map_background": {
+        "url_template": "",
+        "attribution": ""
+    },
     "color_scheme": {
         "main_brand": "",
         "main_brand_darkened": "",
