@@ -181,17 +181,51 @@ function renderMap() {
     attribution: mapAttribution,
   }).addTo(map);
 
+  let detectedGeometryErrorsCount = 0;
   rawResponseData.results.bindings.forEach(item => {
-    const markerColor = (item['markerColor']) ? item['markerColor'].value : '#f03';
+    const geometryColor = (item['geometryColor']) ? item['geometryColor'].value : '#f03';
+    const geometryOpacity = (item['geometryOpacity']) ? parseFloat(item['geometryOpacity'].value) : 1;
     const markerRadius = (item['markerRadius']) ? parseInt(item['markerRadius'].value) : 4;
-    const markerOpacity = (item['markerOpacity']) ? parseFloat(item['markerOpacity'].value) : 1;
 
-    new L.CircleMarker(new L.latLng(item['lat'].value, item['lon'].value), {
-      color: markerColor,
-      radius: markerRadius,
-      fillOpacity: markerOpacity,
-    }).addTo(map);
+    let geometry;
+    if (item['lat'] && item['lon']) {
+      geometry = `${item['lat'].value} ${item['lon'].value}`;
+    }
+
+    geometry = item['geometry'].value.split(' ');
+    geometry = geometry.map(point => {
+      return point.split(',').map(xOrY => {
+        return parseFloat(xOrY);
+      });
+    });
+
+    if (!geometry.every(point => point.length == 2 && point.every(xOrY => typeof xOrY == 'number'))) {
+      detectedGeometryErrorsCount += 1;
+      return;
+    }
+
+    const isPolygon = geometry[geometry.length -1][0] == geometry[0][0] && geometry[geometry.length -1][1] == geometry[0][1];
+    if (geometry.length === 1) {
+      new L.CircleMarker(new L.latLng(geometry[0][0], geometry[0][1]), {
+        color: geometryColor,
+        radius: markerRadius,
+        fillOpacity: geometryOpacity,
+      }).addTo(map);
+    } else if (isPolygon) {
+      L.polygon(geometry, {
+        color: geometryColor,
+        fillOpacity: geometryOpacity,
+      }).addTo(map);
+    } else {
+      L.polyline(geometry, {
+        color: geometryColor,
+      }).addTo(map);
+    }
   });
+
+  if (detectedGeometryErrorsCount) {
+    flashMessage(`Skipped ${detectedGeometryErrorsCount} geometries with errors.`);
+  }
 }
 
 function renderPieChart() {
@@ -296,7 +330,7 @@ function render() {
       renderTable();
     }
   } else if (renderMode === 'map') {
-    if (rawResponseData.head.vars.includes('lat') && rawResponseData.head.vars.includes('lon')) {
+    if ((rawResponseData.head.vars.includes('lat') && rawResponseData.head.vars.includes('lon')) || rawResponseData.head.vars.includes('geometry')) {
       renderMap();
     } else {
       flashMessage('Could not render Map. Missing variables "lat"/"lon".');
