@@ -399,7 +399,7 @@ function init() {
 
   yasqe = YASQE(document.getElementById('queryEditor'));
 
-  window.thorConfig.setupQueryLibrary ? setupQueryLibrary() : document.querySelector('a[href="#query-library-modal"]').parentElement.remove();
+  window.thorConfig.query_library_endpoint ? setupQueryLibrary() : document.querySelector('a[href="#query-library-modal"]').parentElement.remove();
 }
 
 // drag to change editor size logic
