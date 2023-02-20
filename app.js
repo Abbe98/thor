@@ -432,6 +432,21 @@ function init() {
   yasqe = YASQE(document.getElementById('queryEditor'));
 
   window.thorConfig.query_library_endpoint ? setupQueryLibrary() : document.querySelector('a[href="#query-library-modal"]').parentElement.remove();
+
+  findAndUpdateQueryTitle();
+  yasqe.on('change', findAndUpdateQueryTitle);
+}
+
+function findAndUpdateQueryTitle() {
+  const query = yasqe.getValue();
+  for (line of query.split('\n')) {
+    if (line.startsWith('#title:')) {
+      const queryTitle = line.replace(/^#title\:/, '').trim()
+      document.title = window.thorConfig.title + ': ' + queryTitle;
+      return;
+    }
+  };
+  document.title = window.thorConfig.title;
 }
 
 // drag to change editor size logic
