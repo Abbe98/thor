@@ -4,8 +4,20 @@ YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customC
 
 let rawResponseData;
 YASQE.defaults.sparql.callbacks.success = data => {
-  document.querySelector('#queryLoadingIndicator').style.display = 'none';
   rawResponseData = data;
+
+  const query = yasqe.getValue();
+  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid'];
+  for (line of query.split('\n')) {
+    for (view of potentialDefaultViews) {
+      if (line.startsWith(`#defaultView:${view}`)) {
+        renderMode = view.toLocaleLowerCase();
+        break;
+      }
+    };
+  };
+
+  document.querySelector('#queryLoadingIndicator').style.display = 'none';
   render(data);
 }
 
@@ -108,6 +120,10 @@ function setResultsLabel(len, max) {
 }
 
 function renderTable() {
+  // we fallback to table so we make sure to update the select
+  renderMode = 'table';
+  document.querySelector('#renderModeSelector').value = renderMode;
+
   const table = document.createElement('table');
   table.classList.add(['thor-table']);
   table.id = 'resultTable';
@@ -315,14 +331,14 @@ function render() {
     return;
   }
 
-  if (renderMode === 'images') {
+  if (renderMode === 'imagegrid') {
     if (rawResponseData.head.vars.includes('thumbnail')) {
       renderImages();
     } else {
       flashMessage('Could not render Image grid. No variable named "thumbnail".');
       renderTable();
     }
-  } else if (renderMode === 'pie') {
+  } else if (renderMode === 'piechart') {
     if (rawResponseData.head.vars.includes('count') && rawResponseData.head.vars.includes('label')) {
       renderPieChart();
     } else {
@@ -339,6 +355,8 @@ function render() {
   } else {
     renderTable();
   }
+
+  document.querySelector('#renderModeSelector').value = renderMode;
 }
 
 
