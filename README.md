@@ -21,7 +21,7 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
 {
     "sparql_endpoint": "",
     "query_library_endpoint": "",
-    "header_brand_content": "",
+    "title": "",
     "demo_tour": {
         "demo_query": "",
         "demo_query_cursor_position": {
@@ -63,9 +63,9 @@ The SPARQL endpoint to use. If left out, the user will be able to input their ow
 
 The endpoint to use for the query library. If left out, the query library will be disabled.
 
-### `header_brand_content`
+### `title`
 
-The content of the header brand. Can take HTML code but it will be injected into a `<h1>` tag.
+The title of the editor.
 
 ### `demo_tour`
 

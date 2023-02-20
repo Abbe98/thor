@@ -2,7 +2,7 @@ fetch('config/config.json').then(response => {
     return response.json();
 }).then(data => {
     window.thorConfig = data;
-    document.querySelector('#brandHeader').innerHTML = window.thorConfig.header_brand_content;
+    document.querySelector('#title').innerText = window.thorConfig.title;
 
     const colors = window.thorConfig.color_scheme;
     const setColor = (variable, color) => { document.documentElement.style.setProperty(variable, color) };

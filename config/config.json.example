@@ -1,7 +1,7 @@
 {
     "sparql_endpoint": "",
     "query_library_endpoint": "",
-    "header_brand_content": "",
+    "title": "",
     "demo_tour": {
         "demo_query": "",
         "demo_query_cursor_position": {
