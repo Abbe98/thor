@@ -62,12 +62,15 @@ function clearResults() {
 
 function download(evt) {
   const format = evt.options[evt.selectedIndex].value;
-  const downloadElm = document.querySelector('#download');
+
+  let fileName;
+  let dataString;
+  let mimeType;
 
   if (format === 'json' && rawResponseData) {
-    downloadElm.href = window.URL.createObjectURL(new Blob([JSON.stringify(rawResponseData)], { type: 'application/json' }));
-    downloadElm.download = 'query-result.json';
-    downloadElm.click();
+    mimeType = 'application/json';
+    fileName = 'query-result.json';
+    dataString = JSON.stringify(rawResponseData);
   } else if (format == 'csv') {
     let csvString = '';
     csvString += '"' + rawResponseData.head.vars.join('","') + '"\n';
@@ -78,14 +81,20 @@ function download(evt) {
       });
       csvString += '"' + rowKeyValues.join('","') + '"\n';
     });
-    downloadElm.href = window.URL.createObjectURL(new Blob([csvString], { type: 'text/csv' }));
-    downloadElm.download = 'query-result.csv';
-    downloadElm.click();
+    mimeType = 'text/csv';
+    fileName = 'query-result.csv';
+    dataString = csvString;
   } else if (format === 'rq') {
-    downloadElm.href = window.URL.createObjectURL(new Blob([yasqe.getValue()], { type: 'text/sparql' }));
-    downloadElm.download = 'query.rq';
-    downloadElm.click();
+    mimeType = 'text/sparql';
+    fileName = 'query.rq';
+    dataString = yasqe.getValue();
   }
+
+  const downloadElm = document.querySelector('#download');
+  downloadElm.download = fileName;
+  downloadElm.href = window.URL.createObjectURL(new Blob([dataString], { type: mimeType }));
+  downloadElm.click();
+
   evt.options[evt.selectedIndex].selected = false;
 }
 
