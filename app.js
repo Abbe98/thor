@@ -63,6 +63,7 @@ function clearResults() {
 function download(evt) {
   const format = evt.options[evt.selectedIndex].value;
   const downloadElm = document.querySelector('#download');
+
   if (format === 'json' && rawResponseData) {
     downloadElm.href = window.URL.createObjectURL(new Blob([JSON.stringify(rawResponseData)], { type: 'application/json' }));
     downloadElm.download = 'query-result.json';
@@ -79,6 +80,10 @@ function download(evt) {
     });
     downloadElm.href = window.URL.createObjectURL(new Blob([csvString], { type: 'text/csv' }));
     downloadElm.download = 'query-result.csv';
+    downloadElm.click();
+  } else if (format === 'rq') {
+    downloadElm.href = window.URL.createObjectURL(new Blob([yasqe.getValue()], { type: 'text/sparql' }));
+    downloadElm.download = 'query.rq';
     downloadElm.click();
   }
   evt.options[evt.selectedIndex].selected = false;
