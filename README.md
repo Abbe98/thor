@@ -110,7 +110,7 @@ An object for the color scheme configuration. These are all exposed as `root` CS
 
 ### Examples
 
- - [FornPunkt](https://github.com/fornpunkt/sparql/blob/main/editor/config.json)
+ - [FornPunkt](https://github.com/fornpunkt/sparql/blob/main/thor-configuration/config.json)
  - [TORA (National Archives of Sweden)](https://github.com/Riksarkivet/ra-sokprototyper/blob/main/thor/config.json)
 
 ## Query libraries
