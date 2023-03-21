@@ -219,10 +219,11 @@ function renderMap() {
 
     let geometry;
     if (item['lat'] && item['lon']) {
-      geometry = `${item['lat'].value} ${item['lon'].value}`;
+      geometry = `${item['lat'].value},${item['lon'].value}`.split(' ');
+    } else {
+      geometry = item['geometry'].value.split(' ');
     }
 
-    geometry = item['geometry'].value.split(' ');
     geometry = geometry.map(point => {
       return point.split(',').map(xOrY => {
         return parseFloat(xOrY);
