@@ -281,6 +281,10 @@ select {
   right: 0;
 }
 
+.close svg {
+  fill: var(--secondary-brand);
+}
+
 .thor-modal h2 {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
@@ -328,8 +332,12 @@ select {
 .share-btn {
   position: absolute;
   z-index: 500;
-  right: 24px;
-  top: 87px;
+  right: 20px;
+  top: 80px;
+}
+
+.share-btn svg {
+  fill: var(--secondary-brand);
 }
 
 .handle {
