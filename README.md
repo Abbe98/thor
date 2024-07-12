@@ -45,6 +45,11 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
         "background_shaded": "",
         "border": ""
     },
+    "favicons": {
+        "favicon_success": "",
+        "favicon_error": "",
+        "favicon_progess": ""
+    },
     "autocomplete": {
         "classes": [],
         "prefixes": [],

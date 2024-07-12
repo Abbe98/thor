@@ -17,6 +17,14 @@ fetch('config/config.json').then(response => {
     colors.background_shaded ? setColor('--background-shaded', colors.background_shaded) : undefined;
     colors.border ? setColor('--border', colors.border) : undefined;
 
+
+    // set the default favicon to the success one
+    const favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/svg+xml';
+    favicon.href = (window.thorConfig?.favicons?.favicon_success ?? 'assets/success-favicon.svg');
+    document.head.appendChild(favicon);
+
     if (window.thorConfig.demo_tour && !store.getItem('hasStartedTour')) {
         tour.start();
     }

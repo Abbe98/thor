@@ -18,12 +18,16 @@ YASQE.defaults.sparql.callbacks.success = data => {
   };
 
   document.querySelector('#queryLoadingIndicator').style.display = 'none';
+
+  document.querySelector('link[rel="icon"]').href = (window.thorConfig?.favicons?.favicon_success ?? 'assets/success-favicon.svg');
   render(data);
 }
 
 YASQE.defaults.sparql.callbacks.beforeSend = () => {
   clearResults();
   document.querySelector('#queryLoadingIndicator').style.display = 'block';
+
+  document.querySelector('link[rel="icon"]').href = (window.thorConfig?.favicons?.favicon_progress ?? 'assets/progress-favicon.svg');
 }
 
 YASQE.defaults.sparql.callbacks.error = data => {
@@ -35,6 +39,8 @@ YASQE.defaults.sparql.callbacks.error = data => {
     renderError(data.responseText);
   }
   document.querySelector('#queryLoadingIndicator').style.display = 'none';
+
+  document.querySelector('link[rel="icon"]').href = (window.thorConfig?.favicons?.favicon_error ?? 'assets/failture-favicon.svg');
 }
 
 function getSharableURL() {

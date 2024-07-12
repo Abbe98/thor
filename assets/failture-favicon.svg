@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <style>
+    line, .outer { stroke: #333333; }
+    @media (prefers-color-scheme: dark) {
+      line, .outer { stroke: #ffffff; }
+    }
+  </style>
+  <circle class="outer" cx="75" cy="75" r="65" fill="none" stroke="#333" stroke-width="16"/>
+  <line x1="122" y1="122" x2="170" y2="170" stroke="#333" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="75" cy="75" r="40" fill="#F44336"/>
+</svg>
