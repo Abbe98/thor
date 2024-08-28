@@ -286,6 +286,7 @@ function renderMap() {
     const geometryColor = (item['geometryColor']) ? item['geometryColor'].value : '#f03';
     const geometryOpacity = (item['geometryOpacity']) ? parseFloat(item['geometryOpacity'].value) : 1;
     const markerRadius = (item['markerRadius']) ? parseInt(item['markerRadius'].value) : 4;
+    const geometryTitle = (item['geometryTitle']) ? item['geometryTitle'].value : '';
 
     let geometry;
     if (item['lat'] && item['lon']) {
@@ -306,21 +307,26 @@ function renderMap() {
     }
 
     const isPolygon = geometry[geometry.length -1][0] == geometry[0][0] && geometry[geometry.length -1][1] == geometry[0][1];
+    let rowGeometry;
     if (geometry.length === 1) {
-      new L.CircleMarker(new L.latLng(geometry[0][0], geometry[0][1]), {
+      rowGeometry = new L.CircleMarker(new L.latLng(geometry[0][0], geometry[0][1]), {
         color: geometryColor,
         radius: markerRadius,
         fillOpacity: geometryOpacity,
       }).addTo(map);
     } else if (isPolygon) {
-      L.polygon(geometry, {
+      rowGeometry = L.polygon(geometry, {
         color: geometryColor,
         fillOpacity: geometryOpacity,
       }).addTo(map);
     } else {
-      L.polyline(geometry, {
+      rowGeometry = L.polyline(geometry, {
         color: geometryColor,
       }).addTo(map);
+    }
+
+    if (geometryTitle !== '') {
+      rowGeometry.bindPopup(geometryTitle);
     }
   });
 
