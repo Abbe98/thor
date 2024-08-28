@@ -93,16 +93,22 @@ select {
   border: none;
 }
 
-.thor-button-confirm {
+.thor-button[disabled] {
+  cursor: not-allowed;
   background-color: var(--secondary-brand-darkened);
   border-color: var(--secondary-brand-darkened);
+}
+
+.thor-button-confirm {
+  background-color: var(--secondary-brand);
+  border-color: var(--secondary-brand);
 }
 
 .thor-button-confirm:hover,
 .thor-button-confirm:active,
 .thor-button-confirm:focus {
-  background-color: var(--secondary-brand);
-  border-color: var(--secondary-brand);
+  background-color: var(--secondary-brand-darkened);
+  border-color: var(--secondary-brand-darkened);
 }
 
 .thor-nav {
@@ -388,6 +394,7 @@ select {
 }
 
 .center-items {
+  justify-content: center;
   align-items: center;
 }
 

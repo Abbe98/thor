@@ -130,15 +130,21 @@ function getURIMarkup(yasqe, uri) {
 
 function setResultsLabel(len, max) {
   const label = document.querySelector('#result-label');
-  let text = `viewing ${len}/${len} rows`;
-  if (len > max) {
-    text = `viewing ${max}/${len} rows`;
+  const start = max - 500 +1;
+  if (start < 0) {
+    start = 1;
   }
 
+  if (max > len) {
+    max = len
+  }
+
+  let text = `${start}-${max}/ ${len} rows`;
   label.innerText = text;
   label.style.display = 'block';
 }
 
+let currentPage = 0; // global variable to keep track of pagination
 function renderTable() {
   // we fallback to table so we make sure to update the select
   renderMode = 'table';
@@ -163,28 +169,86 @@ function renderTable() {
 
   tbody = document.createElement('tbody');
   setResultsLabel(rawResponseData.results.bindings.length, 500);
-  rawResponseData.results.bindings.slice(-500).forEach(e => { // this loop could be clearer
-    const tr = document.createElement('tr');
-    vars.forEach(v => {
-      const td = document.createElement('td');
-      let node;
-      if (e[v]) {
-        if (e[v].value.startsWith('http')) {
-          node = getURIMarkup(yasqe, e[v].value);
+
+  // we slice the results in sections of 500 responses each
+  let slices = [];
+  for (let i = 0; i < rawResponseData.results.bindings.length; i += 500) {
+    slices.push(rawResponseData.results.bindings.slice(i, i + 500));
+  }
+
+  let renderedSlices = [];
+
+  slices.forEach(slice => {
+    let sliceContents = [];
+    slice.forEach(e => { // this loop could be clearer
+      const tr = document.createElement('tr');
+      vars.forEach(v => {
+        const td = document.createElement('td');
+        let node;
+        if (e[v]) {
+          if (e[v].value.startsWith('http')) {
+            node = getURIMarkup(yasqe, e[v].value);
+          } else {
+            node = document.createTextNode(e[v].value);
+          }
         } else {
-          node = document.createTextNode(e[v].value);
+          node = document.createTextNode('');
         }
-      } else {
-        node = document.createTextNode('');
-      }
-      td.appendChild(node);
-      tr.appendChild(td);
+        td.appendChild(node);
+        tr.appendChild(td);
+       });
+
+    sliceContents.push(tr);
     });
-    tbody.appendChild(tr);
+
+    renderedSlices.push(sliceContents);
+  });
+
+  renderedSlices[0].forEach(slice => {
+    tbody.appendChild(slice);
   });
   table.appendChild(tbody);
 
+  const paginationContainer = document.createElement('div');
+  paginationContainer.classList.add('flex', 'center-items');
+  const previousButton = document.createElement('button');
+  previousButton.innerText = '←';
+  previousButton.classList.add('thor-button', 'thor-button-confirm', 'm-tb-small', 'm-lr-small');
+  const nextButton = document.createElement('button');
+  nextButton.innerText = '→';
+  nextButton.classList.add('thor-button', 'thor-button-confirm');
+  window.currentPage = 0;
+
+  function updatePagination(page) {
+    window.currentPage = page;
+    tbody.innerHTML = '';
+    renderedSlices[window.currentPage].forEach(slice => {
+      tbody.appendChild(slice);
+    });
+    setResultsLabel(rawResponseData.results.bindings.length, 500 * (window.currentPage + 1));
+
+    if (window.currentPage === 0) {
+      previousButton.disabled = true;
+    } else {
+      previousButton.removeAttribute('disabled');
+    }
+
+    if (window.currentPage === renderedSlices.length - 1) {
+      nextButton.disabled = true;
+    } else {
+      nextButton.removeAttribute('disabled');
+    }
+  }
+
+  previousButton.addEventListener('click', () => updatePagination(window.currentPage - 1));
+  nextButton.addEventListener('click', () => updatePagination(window.currentPage + 1));
+
+  paginationContainer.appendChild(previousButton);
+  paginationContainer.appendChild(nextButton);
   document.querySelector('#resultContainer').appendChild(table);
+  document.querySelector('#resultContainer').appendChild(paginationContainer);
+  // trigger pagination update to make sure the button states are correct
+  updatePagination(window.currentPage);
 }
 
 function renderImages() {
