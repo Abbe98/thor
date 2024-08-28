@@ -327,6 +327,20 @@ function renderMap() {
   if (detectedGeometryErrorsCount) {
     flashMessage(`Skipped ${detectedGeometryErrorsCount} geometries with errors.`);
   }
+
+  // get the bounds from the geometries
+  const bounds = rawResponseData.results.bindings.map(item => {
+    if (item['lat'] && item['lon']) {
+      return [item['lat'].value, item['lon'].value];
+    } else {
+      return item['geometry'].value.split(' ').map(point => {
+        return point.split(',').map(xOrY => {
+          return parseFloat(xOrY);
+        });
+      });
+    }
+  }).flat();
+  map.fitBounds(bounds);
 }
 
 function renderPieChart() {
