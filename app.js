@@ -204,9 +204,13 @@ function renderTable() {
     renderedSlices.push(sliceContents);
   });
 
-  renderedSlices[0].forEach(slice => {
-    tbody.appendChild(slice);
-  });
+  if (renderedSlices.length !== 0) {
+    renderedSlices[0].forEach(slice => {
+      tbody.appendChild(slice);
+    });
+  } else {
+    flashMessage('No results found.');
+  }
   table.appendChild(tbody);
 
   const paginationContainer = document.createElement('div');
@@ -220,6 +224,12 @@ function renderTable() {
   window.currentPage = 0;
 
   function updatePagination(page) {
+    if (page < 0 || page >= renderedSlices.length) {
+      nextButton.disabled = true;
+      previousButton.disabled = true;
+      return;
+    }
+
     window.currentPage = page;
     tbody.innerHTML = '';
     renderedSlices[window.currentPage].forEach(slice => {
@@ -334,7 +344,11 @@ function renderMap() {
     flashMessage(`Skipped ${detectedGeometryErrorsCount} geometries with errors.`);
   }
 
-  // get the bounds from the geometries
+  if (rawResponseData.results.bindings.length === 0) {
+    flashMessage('No results found.');
+    return;
+  }
+
   const bounds = rawResponseData.results.bindings.map(item => {
     if (item['lat'] && item['lon']) {
       return [item['lat'].value, item['lon'].value];
