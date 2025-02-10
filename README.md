@@ -13,7 +13,23 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
  - A configurable color scheme
  - _...and plenty of more..._
 
+## Usage
 
+Thor is a set of static files and all you need to get started is to serve it and a configuration file at `config/config.json`.
+
+To create a configuration file you can start from an existing configuration or create on from scratch using the reference below.
+
+Example configurations:
+
+ - [FornPunkt](https://github.com/fornpunkt/sparql/blob/main/thor-configuration/config.json)
+ - [TORA (National Archives of Sweden)](https://github.com/Riksarkivet/ra-sokprototyper/blob/main/thor/config.json)
+
+The FornPunkt project does contain a full configuration for the Caddy webserver showing how to serve Thor and the necessary configuration files. You can also read more about deploying static files in the guides below:
+
+ - [NGINX: Serving Static Content](https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/)
+ - [Caddy: Static files quick-start](https://caddyserver.com/docs/quick-starts/static-files)
+
+Not that nothing is stopping you form serving Thor configuration from a non-static source. You can therefore dynamicly change your endpoint or provide an interface for updating the configuration if you want to.
 
 ## Configuration reference
 
@@ -141,11 +157,6 @@ The `config` parameter allows a single Thor instance to use multiply configuirat
 
 The `query` URI fragment can be set to populate the editor with text. The text should be URL encoded. Example: `#query=Hello%20World`
 
-### Examples
-
- - [FornPunkt](https://github.com/fornpunkt/sparql/blob/main/thor-configuration/config.json)
- - [TORA (National Archives of Sweden)](https://github.com/Riksarkivet/ra-sokprototyper/blob/main/thor/config.json)
-
 ## Query libraries
 
 A query library is a JSON file containing an array of queries. Each query is an object with the following properties:
@@ -172,9 +183,3 @@ It's common to generate this JSON file from a code-snippet library or from induv
 ]
 ```
 
-## Deployment
-
-Thor only consists of static files but expects to find your `config.json` file in the `config` directory. Your query library can also be served from the `config` directory if you wish.
-
- - [NGINX: Serving Static Content](https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/)
- - [Caddy: Static files quick-start](https://caddyserver.com/docs/quick-starts/static-files)
