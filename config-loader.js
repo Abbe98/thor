@@ -29,6 +29,14 @@ function setConfig(data) {
     init();
 }
 
+function loadDefaultConfig() {
+    fetch('config/config.json').then(response => {
+        return response.json();
+    }).then(data => {
+        setConfig(data);
+    })
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 const config = urlParams.get('config');
 
@@ -37,12 +45,10 @@ if (config) {
         return response.json();
     }).then(data => {
         setConfig(data);
+    }).catch(() => {
+        loadDefaultConfig();
     });
 } else {
-    fetch('config/config.json').then(response => {
-        return response.json();
-    }).then(data => {
-        setConfig(data);
-    })
+    loadDefaultConfig();
 }
 
