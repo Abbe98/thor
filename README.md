@@ -13,6 +13,8 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
  - A configurable color scheme
  - _...and plenty of more..._
 
+
+
 ## Configuration reference
 
 ### Struture
@@ -112,6 +114,16 @@ An object for the color scheme configuration. These are all exposed as `root` CS
  - `background`
  - `background_shaded`
  - `border`
+
+## URL parameter reference
+
+### `config`
+
+The `config` parameter allows a single Thor instance to use multiply configuirations. This parameter is only used if alternative configurations extists in the `config` directory. Note that the value of the parameter should be the configuration filename minus the file-suffix.
+
+### `query` (URI fragment)
+
+The `query` URI fragment can be set to populate the editor with text. The text should be URL encoded. Example: `#query=Hello%20World`
 
 ### Examples
 
