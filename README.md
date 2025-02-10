@@ -11,7 +11,7 @@ _A platform-agnostic, configurable, and brandable SPARQL editor and visualizatio
  - A resizable code editor
  - An interactive tour of the GUI
  - A configurable color scheme
- - _...and plenty of more..._
+ - _...and plenty more..._
 
 ## Usage
 
