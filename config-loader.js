@@ -1,6 +1,4 @@
-fetch('config/config.json').then(response => {
-    return response.json();
-}).then(data => {
+function setConfig(data) {
     window.thorConfig = data;
     document.querySelector('#title').innerText = window.thorConfig.title;
 
@@ -29,4 +27,22 @@ fetch('config/config.json').then(response => {
         tour.start();
     }
     init();
-});
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const config = urlParams.get('config');
+
+if (config) {
+    fetch(`config/${config}.json`).then(response => {
+        return response.json();
+    }).then(data => {
+        setConfig(data);
+    });
+} else {
+    fetch('config/config.json').then(response => {
+        return response.json();
+    }).then(data => {
+        setConfig(data);
+    })
+}
+
