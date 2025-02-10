@@ -115,6 +115,22 @@ An object for the color scheme configuration. These are all exposed as `root` CS
  - `background_shaded`
  - `border`
 
+## SPARQL magic-comments reference
+
+Thor uses the same comment system as the Wikidata Query Service GUI to allow users to control the page title and default visualization.
+
+### `defaultView`
+
+The `defaultView` comment allows users to pick one of the following as the default result visualization: `Table`, `Map`, `PieChart`, and `ImageGrid`.
+
+Example: `#defaultView:Map`
+
+### `Title`
+
+The `Title` comment sets the page title.
+
+Example: `#title:My best query`
+
 ## URL parameter reference
 
 ### `config`
