@@ -494,14 +494,16 @@ function setupQueryLibrary() {
       h3.appendChild(h3Text);
       div.appendChild(h3);
 
-      query.tags.forEach(tag => {
-        const span = document.createElement('span');
-        const spanText = document.createTextNode(tag);
+      if (query.tags !== undefined) {
+        query.tags.forEach(tag => {
+          const span = document.createElement('span');
+          const spanText = document.createTextNode(tag);
 
-        span.classList.add('thor-label', 'm-l-small');
-        span.appendChild(spanText);
-        div.appendChild(span);
-      });
+          span.classList.add('thor-label', 'm-l-small');
+          span.appendChild(spanText);
+          div.appendChild(span);
+        });
+      }
 
       div.addEventListener('click', e => {
         const hostElm = (e.target.tagName === 'DIV') ? e.target : e.target.parentElement;
