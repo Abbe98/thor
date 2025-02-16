@@ -313,8 +313,8 @@ select {
 
 .thor-large-list li div {
   border-left: 7px solid var(--main-brand);
-  padding-left: 15px;
-  height: 60px;
+  padding: 1em;
+  margin-bottom: 1em;
 }
 
 .thor-large-list li div.interactive {
@@ -323,6 +323,7 @@ select {
 
 .thor-large-list li div.interactive h3 {
   color: var(--main-brand);
+  margin-top: 0;
 }
 
 .thor-large-list li div.interactive:hover h3 {
