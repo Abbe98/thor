@@ -532,10 +532,11 @@ function closeAndSetEndpointModal() {
 
 var yasqe;
 function init() {
-  if (localStorage.getItem('endpoint') !== null) {
-    YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
-  } else if (window.thorConfig.sparql_endpoint) {
+  if (window.thorConfig.sparql_endpoint) {
     YASQE.defaults.sparql.endpoint = window.thorConfig.sparql_endpoint;
+    localStorage.setItem('endpoint', window.thorConfig.sparql_endpoint);
+  } else if (localStorage.getItem('endpoint') !== null) {
+    YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
   } else {
     window.location.hash = 'endpoint-modal';
   }
