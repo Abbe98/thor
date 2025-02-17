@@ -523,20 +523,36 @@ function setupQueryLibrary() {
 
 function closeAndSetEndpointModal() {
   const endpoint = document.querySelector('#endpointInput').value;
-  localStorage.setItem('endpoint', endpoint);
-  yasqe.options.sparql.endpoint = localStorage.getItem('endpoint');
+  yasqe.options.sparql.endpoint = endpoint;
+  localStorage.setItem('endpoint', endpoint); // only the modal inputed endpoint goes into the generic "endpoint" key
+  YASQE.defaults.persistent = getEndpointHash(endpoint) + '-query-value';
   window.location.hash = '';
+}
+
+function getEndpointHash(endpoint) {
+  let hash = 0;
+  for (let i = 0; i < endpoint.length; i++) {
+    const char = endpoint.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(16).padStart(8, '0');
 }
 
 // main init called by the config loader
 
 var yasqe;
 function init() {
+  let endpointHash;
   if (window.thorConfig.sparql_endpoint) {
     YASQE.defaults.sparql.endpoint = window.thorConfig.sparql_endpoint;
-    localStorage.setItem('endpoint', window.thorConfig.sparql_endpoint);
-  } else if (localStorage.getItem('endpoint') !== null) {
+    endpointHash = getEndpointHash(window.thorConfig.sparql_endpoint);
+    localStorage.setItem(endpointHash + '-endpoint', window.thorConfig.sparql_endpoint);
+    YASQE.defaults.persistent = endpointHash + '-query-value';
+  } else if (localStorage.getItem('endpoint') !== null) { // for modal input endpoints we still use a non-namespaced 
     YASQE.defaults.sparql.endpoint = localStorage.getItem('endpoint');
+    endpointHash = getEndpointHash(localStorage.getItem('endpoint'));
+    YASQE.defaults.persistent = endpointHash + '-query-value';
   } else {
     window.location.hash = 'endpoint-modal';
   }
