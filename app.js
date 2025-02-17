@@ -94,6 +94,10 @@ function download(evt) {
     mimeType = 'text/sparql';
     fileName = 'query.rq';
     dataString = yasqe.getValue();
+  } else if (format === 'curl') {
+    mimeType = 'text/plain';
+    fileName = 'query.curl';
+    dataString = `curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "query=${encodeURIComponent(yasqe.getValue())}" ${yasqe.options.sparql.endpoint}`;
   }
 
   const downloadElm = document.querySelector('#download');
