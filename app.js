@@ -285,7 +285,8 @@ function renderMap() {
   const mapContainer = document.createElement('div');
   mapContainer.id = 'map';
   document.querySelector('#resultContainer').appendChild(mapContainer);
-  mapContainer.style.height = '600px';
+  mapContainer.style.height = 'calc(100vh - 450px)'; // ~450px is about the default height of the other elements
+  mapContainer.style.minHeight = '600px';
 
   const tileURL = window.thorConfig.map_background && window.thorConfig.map_background.url_template ? window.thorConfig.map_background.url_template : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   const mapAttribution = window.thorConfig.map_background && window.thorConfig.map_background.attribution ? window.thorConfig.map_background.attribution : '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
