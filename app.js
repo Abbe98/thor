@@ -436,6 +436,8 @@ function renderPieChart() {
   const pre = document.createElement('pre');
   const text = document.createTextNode(errorText);
   pre.appendChild(text);
+
+  populateDownloadOptions('plaintext');
   document.querySelector('#resultContainer').appendChild(pre);
 }
 
