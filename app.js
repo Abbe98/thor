@@ -20,11 +20,15 @@ YASQE.defaults.sparql.callbacks.success = data => {
   document.querySelector('#queryLoadingIndicator').style.display = 'none';
 
   document.querySelector('link[rel="icon"]').href = (window.thorConfig?.favicons?.favicon_success ?? 'assets/success-favicon.svg');
-  render(data);
+
+  render();
 }
 
+let queryType; // global variable to keep track of the last sent query type
 YASQE.defaults.sparql.callbacks.beforeSend = () => {
   clearResults();
+  queryType = yasqe.getQueryType();
+
   document.querySelector('#queryLoadingIndicator').style.display = 'block';
 
   document.querySelector('link[rel="icon"]').href = (window.thorConfig?.favicons?.favicon_progress ?? 'assets/progress-favicon.svg');
@@ -98,6 +102,10 @@ function download(evt) {
     mimeType = 'text/plain';
     fileName = 'query.curl';
     dataString = `curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "query=${encodeURIComponent(yasqe.getValue())}" ${yasqe.options.sparql.endpoint}`;
+  } else if (format === 'txt') {
+    mimeType = 'text/plain';
+    fileName = 'query-result.txt';
+    dataString = rawResponseData;
   }
 
   const downloadElm = document.querySelector('#download');
@@ -449,11 +457,20 @@ function renderBoolean(bool) {
 }
 
 function render() {
+  // detect results from DESCRIBE or CONSTRUCT queries
+  if (queryType === 'DESCRIBE' || queryType === 'CONSTRUCT') {
+    populateDownloadOptions('plaintext');
+    renderPlain();
+    return;
+  }
+
   // detect results from ASK queries
   if (typeof rawResponseData['boolean'] === 'boolean') {
+    populateDownloadOptions('ask');
     renderBoolean(rawResponseData['boolean'].toString());
     return;
   }
+  populateDownloadOptions('select');
 
   if (renderMode === 'imagegrid') {
     if (rawResponseData.head.vars.includes('thumbnail')) {
@@ -483,6 +500,48 @@ function render() {
   document.querySelector('#renderModeSelector').value = renderMode;
 }
 
+
+/**
+  * @param {string} responseType - Either ask, selcect, or plaintext
+  */
+function populateDownloadOptions(responseType) {
+  const coreOptions = [
+    { value: null, text: 'Download as' },
+    { value: 'rq', text: 'SPARQL' },
+    { value: 'curl', text: 'CURL' },
+  ];
+
+  const askOptions = [
+    { value: 'json', text: 'JSON' },
+  ];
+
+  const selectOptions = [
+    { value: 'json', text: 'JSON' },
+    { value: 'csv', text: 'CSV' },
+  ];
+
+  const plainOptions = [
+    { value: 'txt', text: 'Plain text' },
+  ];
+
+  const options = coreOptions.concat(responseType === 'ask' ? askOptions : responseType === 'select' ? selectOptions : plainOptions);
+
+  const select = document.querySelector('#downloadSelect');
+  select.innerHTML = '';
+  options.forEach(option => {
+    const opt = document.createElement('option');
+    opt.value = option.value;
+    opt.text = option.text;
+    select.appendChild(opt);
+  });
+}
+
+function renderPlain() {
+  const pre = document.createElement('pre');
+  const text = document.createTextNode(rawResponseData);
+  pre.appendChild(text);
+  document.querySelector('#resultContainer').appendChild(pre);
+}
 
 function setupQueryLibrary() {
   fetch(window.thorConfig.query_library_endpoint).then(response => {

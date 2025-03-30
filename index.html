@@ -34,18 +34,14 @@
           <option value="imagegrid">Image Grid</option>
           <option value="map">Map</option>
         </select>
-        <select class="thor-input thor-select m-tb-small m-lr-small" onchange="download(this)">
+        <select class="thor-input thor-select m-tb-small m-lr-small" onchange="download(this)" id="downloadSelect">
           <option>Download as</option>
-          <option value="json">JSON</option>
-          <option value="csv">CSV</option>
-          <option value="rq">SPARQL</option>
-          <option value="curl">cURL</option>
         </select>
       </div>
 
       <div class="flex center-items">
         <span style="display: none;" id="result-label" class="thor-label"></span>
-        <button class="thor-button thor-button-confirm m-tb-small m-lr-small" onclick="yasqe.query()">Execute</button>
+        <button class="thor-button thor-button-confirm m-tb-small m-lr-small" id="executeBtn" onclick="yasqe.query()">Execute</button>
       </div>
     </div>
 
