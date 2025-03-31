@@ -389,7 +389,7 @@ function renderPieChart() {
 
   const color = d3.scaleOrdinal()
     .domain(data.map(d => d.label))
-    .range(['#4285F4', '#EA4335', '#34A853', '#FBBC04', '#FA7B17', '#F53BA0', '#A142F4', '#24C1E0'])
+    .range(['#003f5c', '#2f4b7c', '#665191', '#a05195', '#d45087', '#f95d6a', '#ff7c43', '#ffa600']);
 
   const pie = d3.pie()
     .sort(null)
@@ -407,8 +407,7 @@ function renderPieChart() {
   .attr('height', height)
   .attr('viewBox', [0, 0, width, height])
   .attr('text-anchor', 'middle')
-  .style('width', '100%')
-  .style('font', '14px sans-serif');
+  .style('width', '100%');
 
   const g = svg.append('g')
     .attr('transform', `translate(${width / 2},${height / 2})`);
@@ -431,6 +430,7 @@ function renderPieChart() {
   text.append('tspan')
     .attr('x', 0)
     .attr('y', '-0.7em')
+    .attr('fill', 'white')
     .text(d => d.data.label);
 }
 
