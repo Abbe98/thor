@@ -384,8 +384,8 @@ function renderPieChart() {
     };
   });
 
-  const width = window.innerWidth;
-  const height = 500;
+  const width = window.innerWidth - 32;
+  const height = window.innerHeight - 450; // ~450px is about the default height of the other elements
 
   const color = d3.scaleOrdinal()
     .domain(data.map(d => d.label))
@@ -405,7 +405,9 @@ function renderPieChart() {
   const svg = d3.select('#resultContainer').append('svg')
   .attr('width', width)
   .attr('height', height)
+  .attr('viewBox', [0, 0, width, height])
   .attr('text-anchor', 'middle')
+  .style('width', '100%')
   .style('font', '14px sans-serif');
 
   const g = svg.append('g')
