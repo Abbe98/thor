@@ -135,7 +135,7 @@ function validateAndSanitizeImageURL(url) {
   try {
     const parsedURL = new URL(url);
 
-    if (url.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png)$)/i) != null) {
+    if (url.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|webp)$)/i) != null) {
       return parsedURL.href;
     }
 
