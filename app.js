@@ -7,7 +7,7 @@ YASQE.defaults.sparql.callbacks.success = data => {
   rawResponseData = data;
 
   const query = yasqe.getValue();
-  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid'];
+  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid', 'Graph'];
   for (line of query.split('\n')) {
     for (view of potentialDefaultViews) {
       if (line.startsWith(`#defaultView:${view}`)) {
@@ -122,6 +122,27 @@ function flashMessage(message) {
   setTimeout(() => {
     document.querySelector('#messageContainer').style.display = 'none';
   }, 10000);
+}
+
+/**
+  * Validates and sanitizes the image URL.
+  * @param {string} url - The image URL to validate and sanitize.
+  * @returns {string|undefined} - The sanitized URL if valid, otherwise undefined.
+  */
+function validateAndSanitizeImageURL(url) {
+  // try to create a new URL object
+  // this will throw if the URL is invalid
+  try {
+    const parsedURL = new URL(url);
+
+    if (url.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|tif)$)/i) != null) {
+      return parsedURL.href;
+    }
+
+    return undefined;
+  } catch (e) {
+    return undefined;
+  }
 }
 
 function getURIMarkup(yasqe, uri) {
@@ -434,7 +455,233 @@ function renderPieChart() {
     .text(d => d.data.label);
 }
 
- function renderError(errorText) {
+function renderGraphVisualization() {
+  d3.select('#resultContainer').html('');
+
+  // Set up dimensions and colors
+  const width = window.innerWidth - 32;
+  const height = window.innerHeight - 450; // ~450px is about the default height of the other elements
+  const nodeRadius = 15;
+  const colors = d3.scaleOrdinal(d3.schemeObservable10);
+
+  const svg = d3.select('#resultContainer')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('viewBox', [0, 0, width, height])
+    .attr('style', 'max-width: 100%; height: auto;');
+
+  const nodes = [];
+  const links = [];
+  const nodeMap = new Map();
+
+  const data = rawResponseData.results.bindings;
+
+  data.forEach(item => {
+    const nodeId = item.node?.value;
+    const nodeLabel = item.nodeLabel?.value || nodeId;
+    const linkedNodeId = item.linkedNode?.value;
+    const nodeImage = validateAndSanitizeImageURL(item.nodeImage?.value);
+    const nodeSize = item.nodeSize?.value ? parseFloat(item.nodeSize.value) : undefined;
+    const nodeColor = item.nodeColor?.value;
+
+    // Skip if node is undefined
+    if (!nodeId) return;
+    
+    // Add source node if it doesn't exist
+    if (!nodeMap.has(nodeId)) {
+      const nodeObj = {
+        id: nodeId,
+        label: nodeLabel,
+        uri: nodeId, // Keep the original URI
+        image: nodeImage,
+        size: nodeSize,
+        color: nodeColor
+      };
+      nodes.push(nodeObj);
+      nodeMap.set(nodeId, nodeObj);
+    } else if (nodeImage || nodeSize || nodeColor) {
+      // Update existing node with any new properties
+      const existingNode = nodeMap.get(nodeId);
+      if (nodeImage && !existingNode.image) existingNode.image = nodeImage;
+      if (nodeSize && !existingNode.size) existingNode.size = nodeSize;
+      if (nodeColor && !existingNode.color) existingNode.color = nodeColor;
+    }
+    
+    // Add target node if it doesn't exist and it's not null
+    if (linkedNodeId && !nodeMap.has(linkedNodeId)) {
+      // Check if we have a label for the linked node
+      const linkedNodeLabel = item.linkedNodeLabel?.value || linkedNodeId;
+      const linkedNodeImage = validateAndSanitizeImageURL(item.linkedNodeImage?.value);
+      const linkedNodeSize = item.linkedNodeSize?.value ? parseFloat(item.linkedNodeSize.value) : undefined;
+      const linkedNodeColor = item.linkedNodeColor?.value;
+
+      const nodeObj = {
+        id: linkedNodeId,
+        label: linkedNodeLabel, // Use provided label or fall back to ID
+        uri: linkedNodeId,
+        image: linkedNodeImage,
+        size: linkedNodeSize,
+        color: linkedNodeColor
+      };
+      nodes.push(nodeObj);
+      nodeMap.set(linkedNodeId, nodeObj);
+    } else if (linkedNodeId && (item.linkedNodeLabel?.value || item.linkedNodeImage?.value || 
+            item.linkedNodeSize?.value || item.linkedNodeColor?.value)) {
+      const existingNode = nodeMap.get(linkedNodeId);
+
+      // Update label if it was previously just the URI
+      if (item.linkedNodeLabel?.value && existingNode.label === existingNode.uri) {
+        existingNode.label = item.linkedNodeLabel.value;
+      }
+
+      // Update other properties if they don't exist yet
+      if (item.linkedNodeImage?.value && !existingNode.image) {
+        existingNode.image = item.linkedNodeImage.value;
+      }
+
+      if (item.linkedNodeSize?.value && !existingNode.size) {
+        existingNode.size = parseFloat(item.linkedNodeSize.value);
+      }
+      
+      if (item.linkedNodeColor?.value && !existingNode.color) {
+        existingNode.color = item.linkedNodeColor.value;
+      }
+    }
+
+    if (linkedNodeId) {
+      links.push({
+        source: nodeId,
+        target: linkedNodeId,
+        label: item.edgeLabel?.value,
+        color: item.edgeColor?.value
+      });
+    }
+  });
+
+  const simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => (d.size || nodeRadius) * 1.5));
+
+  const zoomG = svg.append('g').attr('class', 'zoom-layer');
+  
+  const linkGroup = zoomG.append('g');
+  
+  const link = linkGroup
+    .selectAll('g')
+    .data(links)
+    .join('g');
+
+  link.append('line')
+    .attr('stroke', d => d.color || '#999')
+    .attr('stroke-opacity', 0.6)
+    .attr('stroke-width', 1.5);
+  
+  link.filter(d => d.label)
+    .append('text')
+    .text(d => d.label)
+    .attr('font-size', '10px')
+    .attr('text-anchor', 'middle')
+    .attr('dy', -5)
+    .attr('fill', '#666')
+    .attr('background', '#fff');
+
+  const node = zoomG.append('g')
+    .selectAll('.node')
+    .data(nodes)
+    .join('g')
+    .attr('class', 'node')
+    .call(drag(simulation));
+
+  node.append("circle")
+    .attr('r', d => d.size || nodeRadius)
+    .attr('fill', d => d.color || colors(d.id))
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1.5);
+
+  node.filter(d => d.image)
+    .append('image')
+    .attr('xlink:href', d => d.image)
+    .attr('x', d => -(d.size || nodeRadius))
+    .attr('y', d => -(d.size || nodeRadius))
+    .attr('width', d => (d.size || nodeRadius) * 2)
+    .attr('height', d => (d.size || nodeRadius) * 2)
+    .attr('clip-path', d => `circle(${(d.size || nodeRadius)}px at ${(d.size || nodeRadius)}px ${(d.size || nodeRadius)}px)`);
+
+  node.append('text')
+    .text(d => {
+      // Truncate long labels for display
+      const maxLength = 25;
+      return d.label.length > maxLength ? d.label.substring(0, maxLength) + "..." : d.label;
+    })
+    .attr('text-anchor', 'middle')
+    .attr('dy', d => (d.size || nodeRadius) * 2)
+    .attr('font-size', '12px')
+    .attr('font-family', 'sans-serif');
+  
+  node.append('title')
+    .text(d => `${d.label}\n${d.uri}`);
+
+  simulation.on("tick", () => {
+    link.select("line")
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    link.select('text')
+      .attr('x', d => (d.source.x + d.target.x) / 2)
+      .attr('y', d => (d.source.y + d.target.y) / 2);
+
+    node
+      .attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+  function drag(simulation) {
+    function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
+    
+    function dragged(event) {
+      const transform = d3.zoomTransform(svg.node());
+      event.subject.fx = (event.x - transform.x) / transform.k;
+      event.subject.fy = (event.y - transform.y) / transform.k;
+    }
+    
+    function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+    }
+    
+    return d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended);
+  }
+  
+  const zoom = d3.zoom()
+    .scaleExtent([0.1, 4])
+    .on('zoom', (event) => {
+      zoomG.attr('transform', event.transform);
+    });
+
+  svg.call(zoom);
+
+  svg.on('dblclick.zoom', () => {
+    svg.transition().duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity
+    );
+  });
+  
+  return simulation;
+}
+
+function renderError(errorText) {
   const pre = document.createElement('pre');
   const text = document.createTextNode(errorText);
   pre.appendChild(text);
@@ -495,6 +742,13 @@ function render() {
       renderMap();
     } else {
       flashMessage('Could not render Map. Missing variables "lat"/"lon".');
+      renderTable();
+    }
+  } else if (renderMode === 'graph') {
+    if (rawResponseData.head.vars.includes('node') && rawResponseData.head.vars.includes('linkedNode')) {
+      renderGraphVisualization();
+    } else {
+      flashMessage('Could not render Graph. Missing variables "node"/"linkedNode".');
       renderTable();
     }
   } else {

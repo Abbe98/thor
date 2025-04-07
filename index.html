@@ -33,6 +33,7 @@
           <option value="piechart">Pie Chart</option>
           <option value="imagegrid">Image Grid</option>
           <option value="map">Map</option>
+          <option value="graph">Graph</option>
         </select>
         <select class="thor-input thor-select m-tb-small m-lr-small" onchange="download(this)" id="downloadSelect">
           <option>Download as</option>
@@ -98,7 +99,7 @@
           <p>This SPARQL has several built in visualizations in addition to the default table view. They can all be used by specifying specific variables described below.</p>
 
           <h4>Image Grid</h4>
-          <p>The image grid requires only one variable. <var>?thumbnail</var> should be an image URL invalid image URLs within this variable will be ignored. Note that if you are running Thor over HTTPS images will need to be served over HTTPS as well. The image grid will only render the first 100 images.</p>
+          <p>The image grid requires only one variable. <var>?thumbnail</var> should be an image URL. Invalid image URLs within this variable will be ignored. Note that if you are running Thor over HTTPS images will need to be served over HTTPS as well. The image grid will only render the first 100 images.</p>
 
           <h4>Pie Chart</h4>
           <p>The pie chart requires two variables. <var>?count</var> should be a numeric value. <var>?label</var> should be a literal.</p>
@@ -110,6 +111,20 @@
             <li><var>?geometryOpacity</var>: Numeric 0-1 defining the opacity of the geometry.</li>
             <li><var>?geometryTitle</var>: Literal which renders in a popup when a geometry is clicked.</li>
           </ul></p>
+
+          <h4>Graph</h4>
+          <p>The graph requires two variables. <var>?node</var> should be a URI. <var>?linkedNode</var> should be a URI. Several optional variables are also available: <ul>
+            <li><var>?nodeLabel</var>: Literal which will be used as the node label.</li>
+            <li><var>?nodeImage</var>: URI which will be used as the node image.</li>
+            <li><var>?nodeSize</var>: Float value defining the node size.</li>
+            <li><var>?nodeColor</var>: Literal with a valid CSS color.</li>
+            <li><var>?linkedNodeLabel</var>: Literal which will be used as the linked node label.</li>
+            <li><var>?linkedNodeImage</var>: URI which will be used as the linked node image.</li>
+            <li><var>?linkedNodeSize</var>: Float value defining the linked node size.</li>
+            <li><var>?linkedNodeColor</var>: Literal with a valid CSS color.</li>
+            <li><var>?edgeLabel</var>: Literal which will be used as the edge label.</li>
+            <li><var>?edgeColor</var>: Literal with a valid CSS color.</li>
+          </ul>If the value of a <var>?node*</var> variable conflicts with the value of a <var>?linkedNode*</var> variable the <var>?linkedNode*</var> variable will take precedence.</p>
 
           <h3>Keyboard Shortcuts</h3>
           <table class="thor-table">
