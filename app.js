@@ -135,7 +135,7 @@ function validateAndSanitizeImageURL(url) {
   try {
     const parsedURL = new URL(url);
 
-    if (url.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|tif)$)/i) != null) {
+    if (url.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png)$)/i) != null) {
       return parsedURL.href;
     }
 
@@ -300,7 +300,7 @@ function renderImages() {
 
   setResultsLabel(rawResponseData.results.bindings.length, 500);
   rawResponseData.results.bindings.slice(-100).forEach(row => {
-    if (row.thumbnail.value.match(/^(http(s?):\/\/).+(\.(jpeg|jpg|gif|png|tif)$)/i) != null) {
+    if (validateAndSanitizeImageURL(row.thumbnail.value)) {
       const img = document.createElement('img');
       img.src = row.thumbnail.value;
       container.appendChild(img);
