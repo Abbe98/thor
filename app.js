@@ -410,7 +410,7 @@ function renderPieChart() {
 
   const color = d3.scaleOrdinal()
     .domain(data.map(d => d.label))
-    .range(['#003f5c', '#2f4b7c', '#665191', '#a05195', '#d45087', '#f95d6a', '#ff7c43', '#ffa600']);
+    .range(d3.schemeObservable10);
 
   const pie = d3.pie()
     .sort(null)
