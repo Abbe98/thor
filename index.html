@@ -56,7 +56,7 @@
 
     <p class="thor-alert" id="messageContainer" style="display: none;"></p>
 
-    <dialog id="share-modal" class="thor-modal" style="max-width: 500px;">
+    <dialog id="share-modal" style="max-width: 500px;">
       <form method="dialog">
         <button class="close" title="Close modal">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
@@ -67,7 +67,7 @@
       <button class="m-tb-small m-lr-small thor-button thor-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
     </dialog>
 
-    <dialog closedby="any" id="endpoint-modal" class="thor-modal"  style="max-width: 500px;">
+    <dialog closedby="any" id="endpoint-modal"  style="max-width: 500px;">
       <form method="dialog">
         <button class="close" title="Close modal">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
@@ -78,14 +78,16 @@
       <button class="m-tb-small m-lr-small thor-button thor-button-confirm" style="width:483px" onclick="closeAndSetEndpointModal()">Save</button>
     </dialog>
 
-    <dialog closedby="any" id="documentation-modal" class="thor-modal">
+    <dialog closedby="any" id="documentation-modal">
       <form method="dialog">
         <button class="close" title="Close modal">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
       </form>
-      <h2>Documentation</h2>
-      <div>
+      <div class="header">
+        <h2>Documentation</h2>
+      </div>
+      <div class="content">
         <h3>Tips & Tricks</h3>
         <ul>
             <li>You can drag and drop SPARQL files into the editor.</li>
@@ -171,9 +173,11 @@
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
       </form>
-      <h2>Query Library</h2>
-      <input type="search" id="queryLibrarySearch" class="thor-input m-tb-small" placeholder="Search queries..." style="width: calc(100% - 4rem);">
-      <div>
+      <div class="header">
+        <h2>Query Library</h2>
+        <input type="search" id="queryLibrarySearch" class="thor-input m-tb-small" placeholder="Search queries...">
+      </div>
+      <div class="content">
         <ul id="query-library-container" class="thor-large-list"></ul>
       </div>
     </dialog>
