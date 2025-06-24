@@ -323,6 +323,7 @@ function renderMap() {
   const mapContainer = document.createElement('div');
   mapContainer.id = 'map';
   document.querySelector('#resultContainer').appendChild(mapContainer);
+  setResultsLabel(rawResponseData.results.bindings.length, rawResponseData.results.bindings.length);
   mapContainer.style.height = 'calc(100vh - 450px)'; // ~450px is about the default height of the other elements
   mapContainer.style.minHeight = '600px';
 
@@ -414,6 +415,8 @@ function renderPieChart() {
     };
   });
 
+  setResultsLabel(rawResponseData.results.bindings.length, rawResponseData.results.bindings.length);
+
   const width = window.innerWidth - 32;
   const height = window.innerHeight - 450; // ~450px is about the default height of the other elements
 
@@ -466,6 +469,7 @@ function renderPieChart() {
 
 function renderGraphVisualization() {
   d3.select('#resultContainer').html('');
+  setResultsLabel(rawResponseData.results.bindings.length, rawResponseData.results.bindings.length);
 
   // Set up dimensions and colors
   const width = window.innerWidth - 32;
