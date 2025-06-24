@@ -811,10 +811,20 @@ function renderPlain() {
 }
 
 function setupQueryLibrary() {
-  fetch(window.thorConfig.query_library_endpoint).then(response => {
-    return response.json();
-  }).then(data => {
-    data.forEach(query => {
+  const queryLibraryContainer = document.querySelector('#query-library-container');
+  const searchInput = document.querySelector('#queryLibrarySearch');
+  let queries = []; // To store all fetched queries
+
+  fetch(window.thorConfig.query_library_endpoint)
+    .then(response => response.json())
+    .then(data => {
+      queries = data; // Store fetched queries
+      renderQueryList(queries); // Initial render
+    });
+
+  function renderQueryList(filteredQueries) {
+    queryLibraryContainer.innerHTML = ''; // Clear existing list
+    filteredQueries.forEach(query => {
       const li = document.createElement('li');
       const div = document.createElement('div');
       div.classList.add('interactive');
@@ -843,8 +853,20 @@ function setupQueryLibrary() {
       });
 
       li.appendChild(div);
-      document.querySelector('#query-library-container').appendChild(li);
+      queryLibraryContainer.appendChild(li);
     });
+  }
+
+  searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const filteredQueries = queries.filter(query => {
+      const title = query.title.toLowerCase();
+      const body = query.body.toLowerCase();
+      const tags = query.tags ? query.tags.join(' ').toLowerCase() : '';
+
+      return title.includes(searchTerm) || body.includes(searchTerm) || tags.includes(searchTerm);
+    });
+    renderQueryList(filteredQueries);
   });
 }
 
@@ -890,7 +912,22 @@ function init() {
     setupQueryLibrary();
     document.querySelector('#query-library-modal-button').addEventListener('click', (event) => {
       event.preventDefault();
-      document.getElementById('query-library-modal').showModal();
+      document.getElementById('query-library-modal').show();
+      document.querySelector('.thor-modal-overlay').style.display = 'block';
+    });
+    document.querySelector('#query-library-modal').addEventListener('close', () => {
+      document.querySelector('.thor-modal-overlay').style.display = 'none';
+    });
+    document.querySelector('.thor-modal-overlay').addEventListener('click', () => {
+      document.getElementById('query-library-modal').close();
+      document.querySelector('.thor-modal-overlay').style.display = 'none';
+    });
+    let libraryEscapeEvent = window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        document.getElementById('query-library-modal').close();
+        document.querySelector('.thor-modal-overlay').style.display = 'none';
+        window.removeEventListener('keydown', libraryEscapeEvent);
+      }
     });
   } else {
     document.querySelector('#query-library-modal-button').parentElement.remove();
