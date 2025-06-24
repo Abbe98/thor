@@ -260,8 +260,25 @@ dialog {
   border: none;
 }
 
-dialog div {
+dialog .header {
+  background-color: var(--background);
+  position: sticky;
+  top: 0;
+  padding: 1rem 2rem;
+}
+
+dialog .content {
   padding: 0 2rem;
+}
+
+dialog .header h2 {
+  margin: 0;
+}
+
+dialog form {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
 }
 
 dialog::backdrop {
@@ -280,12 +297,6 @@ dialog .close {
 
 dialog .close svg {
   fill: var(--secondary-brand);
-}
-
-dialog h2 {
-  margin-top: 2.5rem;
-  margin-left: 2rem;
-  padding: 0;
 }
 
 .thor-large-list {
