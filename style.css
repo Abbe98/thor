@@ -252,55 +252,40 @@ select {
   z-index: 1000; /* to be above maps */
 }
 
-.thor-modal-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 2rem;
-  z-index: 5000;
-  background-color: rgba(0,0,0,.5);
-  display: none;
-}
-
-.thor-modal-overlay:target {
-  display: flex;
-}
-
-.thor-modal {
-  z-index: 99997;
+dialog {
   max-width: 900px;
-  position: relative;
-  flex: 1;
   border-radius: 2px;
   background-color: var(--background);
-  overflow: hidden;
+  padding: 0;
+  border: none;
 }
 
-.thor-modal .close {
+dialog div {
+  padding: 0 2rem;
+}
+
+dialog::backdrop {
+  background-color: rgba(0,0,0,.5);
+}
+
+dialog .close {
   position: absolute;
   top: 0;
   right: 0;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
 }
 
-.close svg {
+dialog .close svg {
   fill: var(--secondary-brand);
 }
 
-.thor-modal h2 {
+dialog h2 {
   margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
   margin-left: 2rem;
-  margin-right: 2rem;
-}
-
-.thor-modal>div {
-  padding: 2rem;
-  padding-top: 0;
+  padding: 0;
 }
 
 .thor-large-list {
@@ -341,6 +326,8 @@ select {
   z-index: 500;
   right: 20px;
   top: 80px;
+  border: none;
+  cursor: pointer;
 }
 
 .share-btn svg {

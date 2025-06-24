@@ -53,6 +53,7 @@ function getSharableURL() {
 
 function populateShareModal() {
   document.querySelector('#shareURLInput').value = getSharableURL();
+  document.getElementById('share-modal').showModal();
 }
 
 function copyAndCloseShareModal() {
@@ -60,7 +61,7 @@ function copyAndCloseShareModal() {
   copyTextarea.focus();
   copyTextarea.select();
   document.execCommand('copy'); // assuming that copying never fails. Likely a bad idea.
-  window.location.hash = '';
+  document.getElementById('share-modal').close();
 }
 
 function clearResults() {
@@ -830,7 +831,7 @@ function setupQueryLibrary() {
       div.addEventListener('click', e => {
         const hostElm = (e.target.tagName === 'DIV') ? e.target : e.target.parentElement;
         yasqe.setValue(hostElm.dataset.query);
-        window.location.hash = '';
+        document.getElementById('query-library-modal').close();
       });
 
       li.appendChild(div);
@@ -844,7 +845,7 @@ function closeAndSetEndpointModal() {
   yasqe.options.sparql.endpoint = endpoint;
   localStorage.setItem('endpoint', endpoint); // only the modal inputed endpoint goes into the generic "endpoint" key
   YASQE.defaults.persistent = getEndpointHash(endpoint) + '-query-value';
-  window.location.hash = '';
+  document.getElementById('endpoint-modal').close();
 }
 
 function getEndpointHash(endpoint) {
@@ -872,12 +873,25 @@ function init() {
     endpointHash = getEndpointHash(localStorage.getItem('endpoint'));
     YASQE.defaults.persistent = endpointHash + '-query-value';
   } else {
-    window.location.hash = 'endpoint-modal';
+    document.getElementById('endpoint-modal').showModal();
   }
 
   yasqe = YASQE(document.getElementById('queryEditor'));
 
-  window.thorConfig.query_library_endpoint ? setupQueryLibrary() : document.querySelector('a[href="#query-library-modal"]').parentElement.remove();
+  if (window.thorConfig.query_library_endpoint) {
+    setupQueryLibrary();
+    document.querySelector('#query-library-modal-button').addEventListener('click', (event) => {
+      event.preventDefault();
+      document.getElementById('query-library-modal').showModal();
+    });
+  } else {
+    document.querySelector('#query-library-modal-button').parentElement.remove();
+  }
+
+  document.querySelector('#documentation-modal-button').addEventListener('click', (event) => {
+    event.preventDefault();
+    document.getElementById('documentation-modal').showModal();
+  });
 
   findAndUpdateQueryTitle();
   yasqe.on('change', findAndUpdateQueryTitle);
