@@ -72,15 +72,23 @@ function clearResults() {
 }
 
 function download(evt) {
+  findAndUpdateQueryTitle(); // ensure document.title is updated
+
   const format = evt.options[evt.selectedIndex].value;
 
   let fileName;
+  let queryTitle = '';
+  if (document.title.startsWith(window.thorConfig.title + ': ')) {
+    queryTitle = document.title.substring((window.thorConfig.title + ': ').length);
+  }
+  const sanitizedTitle = sanitizeFilename(queryTitle);
+
   let dataString;
   let mimeType;
 
   if (format === 'json' && rawResponseData) {
     mimeType = 'application/json';
-    fileName = 'query-result.json';
+    fileName = (sanitizedTitle || 'query-result') + '.json';
     dataString = JSON.stringify(rawResponseData);
   } else if (format == 'csv') {
     let csvString = '';
@@ -93,19 +101,19 @@ function download(evt) {
       csvString += '"' + rowKeyValues.join('","') + '"\n';
     });
     mimeType = 'text/csv';
-    fileName = 'query-result.csv';
+    fileName = (sanitizedTitle || 'query-result') + '.csv';
     dataString = csvString;
   } else if (format === 'rq') {
     mimeType = 'text/sparql';
-    fileName = 'query.rq';
+    fileName = (sanitizedTitle || 'query') + '.rq';
     dataString = yasqe.getValue();
   } else if (format === 'curl') {
     mimeType = 'text/plain';
-    fileName = 'query.curl';
+    fileName = (sanitizedTitle || 'query') + '.curl';
     dataString = `curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "query=${encodeURIComponent(yasqe.getValue())}" ${yasqe.options.sparql.endpoint}`;
   } else if (format === 'txt') {
     mimeType = 'text/plain';
-    fileName = 'query-result.txt';
+    fileName = (sanitizedTitle || 'query-result') + '.txt';
     dataString = rawResponseData;
   }
 
@@ -895,6 +903,14 @@ function init() {
 
   findAndUpdateQueryTitle();
   yasqe.on('change', findAndUpdateQueryTitle);
+}
+
+function sanitizeFilename(filename) {
+  if (!filename) {
+    return '';
+  }
+  // Replace characters that are unsafe for file systems with an underscore
+  return filename.replace(/[\/\\:*?"<>|]/g, '_');
 }
 
 function findAndUpdateQueryTitle() {
