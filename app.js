@@ -7,7 +7,7 @@ YASQE.defaults.sparql.callbacks.success = data => {
   rawResponseData = data;
 
   const query = yasqe.getValue();
-  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid', 'Graph'];
+  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid', 'Graph', 'ExploreGraph'];
   for (line of query.split('\n')) {
     for (view of potentialDefaultViews) {
       if (line.startsWith(`#defaultView:${view}`)) {
@@ -694,6 +694,327 @@ function renderGraphVisualization() {
   return simulation;
 }
 
+// Placeholder for ExploreGraph visualization
+function renderExploreGraphVisualization() {
+  d3.select('#resultContainer').html(''); // Clear previous results
+  setResultsLabel(rawResponseData.results.bindings.length, rawResponseData.results.bindings.length); // TODO: This might need adjustment for dynamic loading
+
+  const width = window.innerWidth - 32;
+  const height = window.innerHeight - 450;
+  const nodeRadius = 15;
+  const colors = d3.scaleOrdinal(d3.schemeObservable10);
+
+  const svg = d3.select('#resultContainer')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('viewBox', [0, 0, width, height])
+    .attr('style', 'max-width: 100%; height: auto;');
+
+  let nodes = [];
+  let links = [];
+  const nodeMap = new Map(); // To keep track of nodes and avoid duplicates
+
+  // Initial population of nodes from the main query
+  // Assumes the main query provides ?node and optionally ?nodeLabel, ?nodeImage, etc.
+  rawResponseData.results.bindings.forEach(item => {
+    const nodeId = item.node?.value;
+    if (!nodeId) return; // Skip if node is undefined
+
+    if (!nodeMap.has(nodeId)) {
+      const nodeLabel = item.nodeLabel?.value || nodeId.split('/').pop().split('#').pop(); // Basic label extraction
+      const nodeImage = validateAndSanitizeImageURL(item.nodeImage?.value);
+      const nodeSize = item.nodeSize?.value ? parseFloat(item.nodeSize.value) : undefined;
+      const nodeColor = item.nodeColor?.value;
+
+      const nodeObj = {
+        id: nodeId,
+        label: nodeLabel,
+        uri: nodeId,
+        image: nodeImage,
+        size: nodeSize,
+        color: nodeColor,
+        isExplored: false // Flag to track if a node's predicates/objects have been loaded
+      };
+      nodes.push(nodeObj);
+      nodeMap.set(nodeId, nodeObj);
+    }
+  });
+
+  const zoomG = svg.append('g').attr('class', 'zoom-layer');
+  let linkGroup = zoomG.append('g').attr('class', 'links');
+  let nodeGroup = zoomG.append('g').attr('class', 'nodes');
+
+  const simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id(d => d.id).distance(100))
+    .force('charge', d3.forceManyBody().strength(-350))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => (d.size || nodeRadius) * 1.5));
+
+  function updateGraphDisplay() {
+    // Update nodes
+    const nodeSelection = nodeGroup.selectAll('.node')
+      .data(nodes, d => d.id)
+      .join(
+        enter => {
+          const newNodeGroup = enter.append('g')
+            .attr('class', 'node')
+            .call(drag(simulation))
+            .on('click', handleNodeClick); // Attach click handler
+
+          newNodeGroup.append('circle')
+            .attr('r', d => d.size || nodeRadius)
+            .attr('fill', d => d.color || colors(d.id))
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 1.5);
+
+          newNodeGroup.filter(d => d.image)
+            .append('image')
+            .attr('xlink:href', d => d.image)
+            .attr('x', d => -(d.size || nodeRadius))
+            .attr('y', d => -(d.size || nodeRadius))
+            .attr('width', d => (d.size || nodeRadius) * 2)
+            .attr('height', d => (d.size || nodeRadius) * 2)
+            .attr('clip-path', d => `circle(${(d.size || nodeRadius)}px at ${(d.size || nodeRadius)}px ${(d.size || nodeRadius)}px)`);
+
+          newNodeGroup.append('text')
+            .text(d => {
+              const maxLength = 25;
+              return d.label.length > maxLength ? d.label.substring(0, maxLength) + "..." : d.label;
+            })
+            .attr('text-anchor', 'middle')
+            .attr('dy', d => (d.size || nodeRadius) * 2 + 5) // Adjusted for better spacing
+            .attr('font-size', '12px')
+            .attr('font-family', 'sans-serif');
+
+          newNodeGroup.append('title')
+            .text(d => `${d.label}\n${d.uri}`);
+
+          return newNodeGroup;
+        },
+        update => update, // No specific update logic for existing nodes beyond D3's default
+        exit => exit.remove()
+      );
+
+    // Update links
+    const linkSelection = linkGroup.selectAll('.link')
+      .data(links, d => `${d.source.id}-${d.target.id}-${d.label}`) // Unique key for links
+      .join(
+        enter => {
+          const newLinkGroup = enter.append('g').attr('class', 'link');
+
+          newLinkGroup.append('line')
+            .attr('stroke', d => d.color || '#999')
+            .attr('stroke-opacity', 0.6)
+            .attr('stroke-width', 1.5);
+
+          newLinkGroup.filter(d => d.label)
+            .append('text')
+            .text(d => d.label)
+            .attr('font-size', '10px')
+            .attr('text-anchor', 'middle')
+            .attr('dy', -5) // Position above the line
+            .attr('fill', '#555');
+
+          return newLinkGroup;
+        },
+        update => update,
+        exit => exit.remove()
+      );
+
+    // Restart simulation with new data
+    simulation.nodes(nodes);
+    simulation.force('link').links(links);
+    simulation.alpha(0.3).restart(); // Restart simulation with a bit of energy
+  }
+
+  simulation.on('tick', () => {
+    linkGroup.selectAll('.link').select('line')
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    linkGroup.selectAll('.link').select('text')
+      .attr('x', d => (d.source.x + d.target.x) / 2)
+      .attr('y', d => (d.source.y + d.target.y) / 2);
+
+    nodeGroup.selectAll('.node')
+      .attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  async function handleNodeClick(event, clickedNodeData) {
+    if (clickedNodeData.isExplored) {
+      // Optional: Add logic here if you want to collapse nodes or re-fetch, etc.
+      // For now, if explored, do nothing to prevent multiple fetches for the same node.
+      // flashMessage(`Node ${clickedNodeData.label} already explored.`);
+      return;
+    }
+
+    // Mark node as explored to prevent re-fetching (or handle this more robustly if needed)
+    // clickedNodeData.isExplored = true; // Mark immediately to prevent double clicks
+                                     // Consider moving this to after successful fetch if preferred.
+
+    const iri = clickedNodeData.uri;
+    const sparqlQuery = `SELECT ?p ?o WHERE { <${iri}> ?p ?o . } LIMIT 25`;
+
+    // Display loading indicator near the node or globally
+    flashMessage(`Loading data for ${clickedNodeData.label}...`, false); // temp message
+
+    try {
+      // Temporarily store original callbacks and endpoint
+      const originalSuccessCallback = YASQE.defaults.sparql.callbacks.success;
+      const originalErrorCallback = YASQE.defaults.sparql.callbacks.error;
+      const originalBeforeSendCallback = YASQE.defaults.sparql.callbacks.beforeSend;
+
+      // Override callbacks for this specific query
+      YASQE.defaults.sparql.callbacks.success = (data) => {
+        // Restore original callbacks
+        YASQE.defaults.sparql.callbacks.success = originalSuccessCallback;
+        YASQE.defaults.sparql.callbacks.error = originalErrorCallback;
+        YASQE.defaults.sparql.callbacks.beforeSend = originalBeforeSendCallback;
+
+        document.querySelector('#queryLoadingIndicator').style.display = 'none'; // Hide global indicator
+        flashMessage(`Data loaded for ${clickedNodeData.label}.`); // Clear loading message
+        clickedNodeData.isExplored = true; // Mark as explored after successful fetch
+
+
+        const newTriples = data.results.bindings;
+        let newNodesAdded = false;
+        let newLinksAdded = false;
+
+        newTriples.forEach(triple => {
+          const predicate = triple.p.value;
+          const objectNode = triple.o;
+          const objectValue = objectNode.value;
+          const objectType = objectNode.type; // 'uri', 'literal', 'bnode'
+
+          let targetNodeId = objectValue;
+          if (objectType === 'literal') {
+            // For literals, create a unique ID or display them differently.
+            // Here, we'll create a simplified literal node.
+            targetNodeId = `literal_${objectValue.substring(0,20)}_${Math.random().toString(16).slice(2)}`;
+          }
+
+          if (!nodeMap.has(targetNodeId)) {
+            const newNodeLabel = (objectType === 'uri') ? objectValue.split('/').pop().split('#').pop() : objectValue;
+            const newNode = {
+              id: targetNodeId,
+              label: newNodeLabel,
+              uri: (objectType === 'uri') ? objectValue : null, // URI only if it's a URI
+              isExplored: false, // New nodes are not explored yet
+              isLiteral: objectType === 'literal' // Flag if it's a literal
+            };
+            nodes.push(newNode);
+            nodeMap.set(targetNodeId, newNode);
+            newNodesAdded = true;
+          }
+
+          // Check if link already exists to avoid duplicates (basic check)
+          const linkExists = links.some(l => l.source.id === clickedNodeData.id && l.target.id === targetNodeId && l.label === predicate);
+          if (!linkExists) {
+            links.push({
+              source: clickedNodeData.id, // or nodeMap.get(clickedNodeData.id)
+              target: targetNodeId, // or nodeMap.get(targetNodeId)
+              label: predicate.split('/').pop().split('#').pop() // Simplified label for predicate
+            });
+            newLinksAdded = true;
+          }
+        });
+
+        if (newNodesAdded || newLinksAdded) {
+          updateGraphDisplay();
+        } else {
+          flashMessage(`No new information found for ${clickedNodeData.label}.`);
+        }
+      };
+
+      YASQE.defaults.sparql.callbacks.error = (err) => {
+        // Restore original callbacks
+        YASQE.defaults.sparql.callbacks.success = originalSuccessCallback;
+        YASQE.defaults.sparql.callbacks.error = originalErrorCallback;
+        YASQE.defaults.sparql.callbacks.beforeSend = originalBeforeSendCallback;
+
+        document.querySelector('#queryLoadingIndicator').style.display = 'none';
+        flashMessage(`Error loading data for ${clickedNodeData.label}: ${err.statusText || 'Unknown error'}`, true);
+        console.error("SPARQL Error:", err);
+        // clickedNodeData.isExplored = false; // Optionally reset if fetch failed
+      };
+
+      YASQE.defaults.sparql.callbacks.beforeSend = () => {
+         document.querySelector('#queryLoadingIndicator').style.display = 'block'; // Show global indicator
+      };
+
+      // Execute the query
+      yasqe.setValue(sparqlQuery); // Set the query in YASQE editor (optional, for visibility/debugging)
+      yasqe.query(); // yasqe.query will use the globally set YASQE.defaults.sparql.callbacks
+
+    } catch (error) {
+      // Restore original callbacks in case of synchronous error before query execution
+      YASQE.defaults.sparql.callbacks.success = originalSuccessCallback;
+      YASQE.defaults.sparql.callbacks.error = originalErrorCallback;
+      YASQE.defaults.sparql.callbacks.beforeSend = originalBeforeSendCallback;
+
+      document.querySelector('#queryLoadingIndicator').style.display = 'none';
+      flashMessage(`Client-side error preparing query for ${clickedNodeData.label}.`, true);
+      console.error("Client-side error:", error);
+      // clickedNodeData.isExplored = false; // Optionally reset
+    }
+  }
+
+  // Drag behavior
+  function drag(simulationInstance) {
+    function dragstarted(event) {
+      if (!event.active) simulationInstance.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
+
+    function dragged(event) {
+      // Adjust drag coordinates based on current zoom/pan
+      const transform = d3.zoomTransform(svg.node());
+      event.subject.fx = (event.x - transform.x) / transform.k;
+      event.subject.fy = (event.y - transform.y) / transform.k;
+    }
+
+    function dragended(event) {
+      if (!event.active) simulationInstance.alphaTarget(0);
+      // Do not nullify fx, fy if you want nodes to stay after being dragged
+      // event.subject.fx = null;
+      // event.subject.fy = null;
+    }
+
+    return d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended);
+  }
+
+  // Zoom behavior
+  const zoom = d3.zoom()
+    .scaleExtent([0.1, 4]) // Zoom scale limits
+    .on('zoom', (event) => {
+      zoomG.attr('transform', event.transform); // Apply zoom to the group
+    });
+
+  svg.call(zoom);
+
+  // Double click to reset zoom
+  svg.on('dblclick.zoom', () => {
+    svg.transition().duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity // Reset to original scale and position
+    );
+  });
+
+  // Initial rendering of the graph
+  updateGraphDisplay();
+
+  // flashMessage("ExploreGraph initialized. Click on nodes to load more data.", false);
+  return simulation; // Or nothing, depending on whether it's used elsewhere
+}
+
+
 function renderError(errorText) {
   const pre = document.createElement('pre');
   const text = document.createTextNode(errorText);
@@ -762,6 +1083,15 @@ function render() {
       renderGraphVisualization();
     } else {
       flashMessage('Could not render Graph. Missing variables "node"/"linkedNode".');
+      renderTable();
+    }
+  } else if (renderMode === 'exploregraph') {
+    // For ExploreGraph, we expect at least a 'node' variable in the initial query.
+    // Predicates and objects will be loaded dynamically.
+    if (rawResponseData.head.vars.includes('node')) {
+      renderExploreGraphVisualization();
+    } else {
+      flashMessage('Could not render ExploreGraph. Missing variable "node".');
       renderTable();
     }
   } else {
