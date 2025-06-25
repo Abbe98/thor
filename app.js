@@ -7,7 +7,7 @@ YASQE.defaults.sparql.callbacks.success = data => {
   rawResponseData = data;
 
   const query = yasqe.getValue();
-  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid', 'Graph'];
+  const potentialDefaultViews = ['Table', 'Map', 'PieChart', 'ImageGrid', 'Graph', 'ExploreGraph'];
   for (line of query.split('\n')) {
     for (view of potentialDefaultViews) {
       if (line.startsWith(`#defaultView:${view}`)) {
@@ -172,7 +172,7 @@ function getURIMarkup(yasqe, uri) {
 
 function setResultsLabel(len, max) {
   const label = document.querySelector('#result-label');
-  const start = max - 500 +1;
+  let start = max - 500 +1;
   if (start < 0) {
     start = 1;
   }
@@ -467,13 +467,13 @@ function renderPieChart() {
     .text(d => d.data.label);
 }
 
-function renderGraphVisualization() {
+function renderGraphVisualization(isExploreMode = false) {
   d3.select('#resultContainer').html('');
+  // Adjust label setting for explore mode if it becomes dynamic
   setResultsLabel(rawResponseData.results.bindings.length, rawResponseData.results.bindings.length);
 
-  // Set up dimensions and colors
   const width = window.innerWidth - 32;
-  const height = window.innerHeight - 450; // ~450px is about the default height of the other elements
+  const height = window.innerHeight - 450;
   const nodeRadius = 15;
   const colors = d3.scaleOrdinal(d3.schemeObservable10);
 
@@ -484,85 +484,71 @@ function renderGraphVisualization() {
     .attr('viewBox', [0, 0, width, height])
     .attr('style', 'max-width: 100%; height: auto;');
 
-  const nodes = [];
-  const links = [];
-  const nodeMap = new Map();
+  // These will store all nodes and links, including dynamically loaded ones
+  let nodes = [];
+  let links = [];
+  const nodeMap = new Map(); // To keep track of nodes by ID
 
-  const data = rawResponseData.results.bindings;
+  // Initial data processing from rawResponseData
+  const initialData = rawResponseData.results.bindings;
 
-  data.forEach(item => {
+  initialData.forEach(item => {
     const nodeId = item.node?.value;
-    const nodeLabel = item.nodeLabel?.value || nodeId;
-    const linkedNodeId = item.linkedNode?.value;
+    // In explore mode, nodeLabel might not be present initially for all nodes if only item.node is guaranteed
+    const nodeLabel = item.nodeLabel?.value || nodeId?.split('/').pop().split('#').pop() || "Unknown Node";
+    const linkedNodeId = item.linkedNode?.value; // This is primarily for non-explore mode or pre-linked data
     const nodeImage = validateAndSanitizeImageURL(item.nodeImage?.value);
     const nodeSize = item.nodeSize?.value ? parseFloat(item.nodeSize.value) : undefined;
     const nodeColor = item.nodeColor?.value;
 
     // Skip if node is undefined
-    if (!nodeId) return;
-    
-    // Add source node if it doesn't exist
+    if (!nodeId) return; // Skip if node is undefined (should not happen if query is correct)
+
+    // Add source node (item.node)
     if (!nodeMap.has(nodeId)) {
-      const nodeObj = {
+      nodes.push({
         id: nodeId,
         label: nodeLabel,
-        uri: nodeId, // Keep the original URI
+        uri: nodeId,
         image: nodeImage,
         size: nodeSize,
-        color: nodeColor
-      };
-      nodes.push(nodeObj);
-      nodeMap.set(nodeId, nodeObj);
-    } else if (nodeImage || nodeSize || nodeColor) {
-      // Update existing node with any new properties
-      const existingNode = nodeMap.get(nodeId);
-      if (nodeImage && !existingNode.image) existingNode.image = nodeImage;
-      if (nodeSize && !existingNode.size) existingNode.size = nodeSize;
-      if (nodeColor && !existingNode.color) existingNode.color = nodeColor;
+        color: nodeColor,
+        isExplored: false // For explore mode
+      });
+      nodeMap.set(nodeId, nodes[nodes.length - 1]);
+    } else { // Update existing node with any new properties from this binding
+      const existing = nodeMap.get(nodeId);
+      if (nodeLabel && (!existing.label || existing.label === existing.id)) existing.label = nodeLabel;
+      if (nodeImage && !existing.image) existing.image = nodeImage;
+      if (nodeSize && !existing.size) existing.size = nodeSize;
+      if (nodeColor && !existing.color) existing.color = nodeColor;
     }
-    
-    // Add target node if it doesn't exist and it's not null
-    if (linkedNodeId && !nodeMap.has(linkedNodeId)) {
-      // Check if we have a label for the linked node
-      const linkedNodeLabel = item.linkedNodeLabel?.value || linkedNodeId;
+
+    // Add target node and link if linkedNodeId is present (for standard graph mode or pre-linked data)
+    if (linkedNodeId) {
+      const linkedNodeLabel = item.linkedNodeLabel?.value || linkedNodeId.split('/').pop().split('#').pop();
       const linkedNodeImage = validateAndSanitizeImageURL(item.linkedNodeImage?.value);
       const linkedNodeSize = item.linkedNodeSize?.value ? parseFloat(item.linkedNodeSize.value) : undefined;
       const linkedNodeColor = item.linkedNodeColor?.value;
 
-      const nodeObj = {
-        id: linkedNodeId,
-        label: linkedNodeLabel, // Use provided label or fall back to ID
-        uri: linkedNodeId,
-        image: linkedNodeImage,
-        size: linkedNodeSize,
-        color: linkedNodeColor
-      };
-      nodes.push(nodeObj);
-      nodeMap.set(linkedNodeId, nodeObj);
-    } else if (linkedNodeId && (item.linkedNodeLabel?.value || item.linkedNodeImage?.value || 
-            item.linkedNodeSize?.value || item.linkedNodeColor?.value)) {
-      const existingNode = nodeMap.get(linkedNodeId);
-
-      // Update label if it was previously just the URI
-      if (item.linkedNodeLabel?.value && existingNode.label === existingNode.uri) {
-        existingNode.label = item.linkedNodeLabel.value;
+      if (!nodeMap.has(linkedNodeId)) {
+        nodes.push({
+          id: linkedNodeId,
+          label: linkedNodeLabel,
+          uri: linkedNodeId,
+          image: linkedNodeImage,
+          size: linkedNodeSize,
+          color: linkedNodeColor,
+          isExplored: false // For explore mode
+        });
+        nodeMap.set(linkedNodeId, nodes[nodes.length - 1]);
+      } else { // Update existing linked node
+        const existing = nodeMap.get(linkedNodeId);
+        if (linkedNodeLabel && (!existing.label || existing.label === existing.id)) existing.label = linkedNodeLabel;
+        if (linkedNodeImage && !existing.image) existing.image = linkedNodeImage;
+        if (linkedNodeSize && !existing.size) existing.size = linkedNodeSize;
+        if (linkedNodeColor && !existing.color) existing.color = linkedNodeColor;
       }
-
-      // Update other properties if they don't exist yet
-      if (item.linkedNodeImage?.value && !existingNode.image) {
-        existingNode.image = item.linkedNodeImage.value;
-      }
-
-      if (item.linkedNodeSize?.value && !existingNode.size) {
-        existingNode.size = parseFloat(item.linkedNodeSize.value);
-      }
-      
-      if (item.linkedNodeColor?.value && !existingNode.color) {
-        existingNode.color = item.linkedNodeColor.value;
-      }
-    }
-
-    if (linkedNodeId) {
       links.push({
         source: nodeId,
         target: linkedNodeId,
@@ -572,88 +558,215 @@ function renderGraphVisualization() {
     }
   });
 
-  const simulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.id).distance(100))
-    .force('charge', d3.forceManyBody().strength(-300))
+  const simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id(d => d.id).distance(100))
+    .force('charge', d3.forceManyBody().strength(-350)) // Increased strength a bit
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(d => (d.size || nodeRadius) * 1.5));
+    .force('collision', d3.forceCollide().radius(d => (d.size || nodeRadius) * 1.6)); // Increased collision radius
 
   const zoomG = svg.append('g').attr('class', 'zoom-layer');
-  
-  const linkGroup = zoomG.append('g');
-  
-  const link = linkGroup
-    .selectAll('g')
-    .data(links)
-    .join('g');
+  let linkElements = zoomG.append('g').attr('class', 'links').selectAll('.link');
+  let nodeElements = zoomG.append('g').attr('class', 'nodes').selectAll('.node');
 
-  link.append('line')
-    .attr('stroke', d => d.color || '#999')
-    .attr('stroke-opacity', 0.6)
-    .attr('stroke-width', 1.5);
-  
-  link.filter(d => d.label)
-    .append('text')
-    .text(d => d.label)
-    .attr('font-size', '10px')
-    .attr('text-anchor', 'middle')
-    .attr('dy', -5)
-    .attr('fill', '#666')
-    .attr('background', '#fff');
+  function updateDisplay() {
+    // Update nodes
+    nodeElements = nodeElements.data(nodes, d => d.id)
+      .join(
+        enter => {
+          const newNodeGroup = enter.append('g')
+            .attr('class', 'node')
+            .call(drag(simulation));
 
-  const node = zoomG.append('g')
-    .selectAll('.node')
-    .data(nodes)
-    .join('g')
-    .attr('class', 'node')
-    .call(drag(simulation));
+          if (isExploreMode) {
+            newNodeGroup.on('click', handleNodeClick);
+            newNodeGroup.style('cursor', 'pointer'); // Indicate clickable
+          }
 
-  node.append("circle")
-    .attr('r', d => d.size || nodeRadius)
-    .attr('fill', d => d.color || colors(d.id))
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 1.5);
+          newNodeGroup.append('circle')
+            .attr('r', d => d.size || nodeRadius)
+            .attr('fill', d => d.isExplored && isExploreMode ? '#ccc' : (d.color || colors(d.id))) // Grey out explored nodes
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 1.5);
 
-  node.filter(d => d.image)
-    .append('image')
-    .attr('xlink:href', d => d.image)
-    .attr('x', d => -(d.size || nodeRadius))
-    .attr('y', d => -(d.size || nodeRadius))
-    .attr('width', d => (d.size || nodeRadius) * 2)
-    .attr('height', d => (d.size || nodeRadius) * 2)
-    .attr('clip-path', d => `circle(${(d.size || nodeRadius)}px at ${(d.size || nodeRadius)}px ${(d.size || nodeRadius)}px)`);
+          newNodeGroup.filter(d => d.image)
+            .append('image')
+            .attr('xlink:href', d => d.image)
+            .attr('x', d => -(d.size || nodeRadius))
+            .attr('y', d => -(d.size || nodeRadius))
+            .attr('width', d => (d.size || nodeRadius) * 2)
+            .attr('height', d => (d.size || nodeRadius) * 2)
+            .attr('clip-path', d => `circle(${(d.size || nodeRadius)}px at ${(d.size || nodeRadius)}px ${(d.size || nodeRadius)}px)`);
 
-  node.append('text')
-    .text(d => {
-      // Truncate long labels for display
-      const maxLength = 25;
-      return d.label.length > maxLength ? d.label.substring(0, maxLength) + "..." : d.label;
-    })
-    .attr('text-anchor', 'middle')
-    .attr('dy', d => (d.size || nodeRadius) * 2)
-    .attr('font-size', '12px')
-    .attr('font-family', 'sans-serif');
-  
-  node.append('title')
-    .text(d => `${d.label}\n${d.uri}`);
+          newNodeGroup.append('text')
+            .text(d => {
+              const maxLength = 25;
+              return d.label.length > maxLength ? d.label.substring(0, maxLength) + "..." : d.label;
+            })
+            .attr('text-anchor', 'middle')
+            .attr('dy', d => (d.size || nodeRadius) * 1.5 + 10) // Adjusted for better spacing
+            .attr('font-size', '12px')
+            .attr('font-family', 'sans-serif');
 
-  simulation.on("tick", () => {
-    link.select("line")
+          newNodeGroup.append('title')
+            .text(d => `${d.label}\n${d.uri}`);
+
+          return newNodeGroup;
+        },
+        update => { // Handle updates to existing nodes (e.g., color change on explore)
+          update.select('circle')
+                .attr('fill', d => d.isExplored && isExploreMode ? '#aaa' : (d.color || colors(d.id))); // Darker grey for explored
+          return update;
+        },
+        exit => exit.remove()
+      );
+
+    // Update links
+    linkElements = linkElements.data(links, d => `${d.source.id || d.source}-${d.target.id || d.target}-${d.label || ''}`)
+      .join(
+        enter => {
+          const newLinkGroup = enter.append('g').attr('class', 'link');
+          newLinkGroup.append('line')
+            .attr('stroke', d => d.color || '#999')
+            .attr('stroke-opacity', 0.6)
+            .attr('stroke-width', 1.5);
+
+          newLinkGroup.filter(d => d.label)
+            .append('text')
+            .text(d => d.label)
+            .attr('font-size', '10px')
+            .attr('text-anchor', 'middle')
+            .attr('dy', -5)
+            .attr('fill', '#555');
+          return newLinkGroup;
+        },
+        update => update, // No specific update styling for links yet
+        exit => exit.remove()
+      );
+
+    simulation.nodes(nodes);
+    simulation.force('link').links(links);
+    simulation.alpha(0.3).restart();
+  }
+
+  simulation.on('tick', () => {
+    linkElements.select('line')
       .attr('x1', d => d.source.x)
       .attr('y1', d => d.source.y)
       .attr('x2', d => d.target.x)
       .attr('y2', d => d.target.y);
 
-    link.select('text')
+    linkElements.select('text')
       .attr('x', d => (d.source.x + d.target.x) / 2)
       .attr('y', d => (d.source.y + d.target.y) / 2);
 
-    node
-      .attr('transform', d => `translate(${d.x},${d.y})`);
+    nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
   });
-  function drag(simulation) {
+
+  async function handleNodeClick(event, clickedNodeData) {
+    if (clickedNodeData.isExplored) {
+      flashMessage(`Node ${clickedNodeData.label} already explored.`, false);
+      return;
+    }
+    if (!clickedNodeData.uri) {
+        flashMessage(`Cannot explore literal node: ${clickedNodeData.label}`, true);
+        return;
+    }
+
+    flashMessage(`Loading data for ${clickedNodeData.label}...`, false);
+    document.querySelector('#queryLoadingIndicator').style.display = 'block';
+
+    const sparqlQuery = `SELECT ?p ?o WHERE { <${clickedNodeData.uri}> ?p ?o . } LIMIT 25`;
+    const endpoint = yasqe.options.sparql.endpoint;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/sparql-results+json'
+        },
+        body: `query=${encodeURIComponent(sparqlQuery)}`
+      });
+
+      document.querySelector('#queryLoadingIndicator').style.display = 'none';
+
+      if (!response.ok) {
+        flashMessage(`Error loading data for ${clickedNodeData.label}: ${response.statusText}`, true);
+        console.error("SPARQL Error:", response.statusText, await response.text());
+        return;
+      }
+
+      const sparqlResult = await response.json();
+      clickedNodeData.isExplored = true; // Mark as explored
+
+      let newNodesAdded = false;
+      let newLinksAdded = false;
+
+      sparqlResult.results.bindings.forEach(binding => {
+        const predicateUri = binding.p.value;
+        const objectBinding = binding.o;
+        const objectValue = objectBinding.value;
+        const objectType = objectBinding.type; // 'uri', 'literal', 'bnode'
+
+        let objectLabel = objectValue.split('/').pop().split('#').pop();
+        if (objectType === 'literal') {
+            objectLabel = objectValue; // Use full literal value as label
+        }
+
+
+        let targetNodeId = objectValue;
+         // For literals, we might want a more unique ID if multiple nodes can have same literal string
+        if (objectType === 'literal') {
+             targetNodeId = `literal::${clickedNodeData.id}::${predicateUri}::${objectValue}`;
+        }
+
+
+        if (!nodeMap.has(targetNodeId)) {
+          const newNode = {
+            id: targetNodeId,
+            label: objectLabel,
+            uri: objectType === 'uri' ? objectValue : null, // URI only if it's a URI
+            isLiteral: objectType === 'literal',
+            isExplored: false, // New nodes are not explored by default
+          };
+          nodes.push(newNode);
+          nodeMap.set(targetNodeId, newNode);
+          newNodesAdded = true;
+        }
+
+        const predicateLabel = predicateUri.split('/').pop().split('#').pop();
+        const linkExists = links.some(l => l.source.id === clickedNodeData.id && l.target.id === targetNodeId && l.label === predicateLabel);
+
+        if (!linkExists) {
+          links.push({
+            source: clickedNodeData.id,
+            target: targetNodeId,
+            label: predicateLabel
+          });
+          newLinksAdded = true;
+        }
+      });
+
+      if (newNodesAdded || newLinksAdded) {
+        updateDisplay(); // This will re-bind data and restart simulation
+        flashMessage(`Data loaded for ${clickedNodeData.label}.`, false);
+      } else {
+        flashMessage(`No new triples found for ${clickedNodeData.label}.`, false);
+      }
+      // Update the fill of the clicked node explicitly if not handled by general update
+      d3.select(event.currentTarget).select('circle').attr('fill', '#aaa');
+
+
+    } catch (error) {
+      document.querySelector('#queryLoadingIndicator').style.display = 'none';
+      flashMessage(`Client-side error fetching data for ${clickedNodeData.label}: ${error.message}`, true);
+      console.error("Fetch error:", error);
+    }
+  }
+
+  function drag(sim) { // Renamed parameter to avoid conflict
     function dragstarted(event) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
+      if (!event.active) sim.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
@@ -665,9 +778,12 @@ function renderGraphVisualization() {
     }
     
     function dragended(event) {
-      if (!event.active) simulation.alphaTarget(0);
-      event.subject.fx = null;
-      event.subject.fy = null;
+      if (!event.active) sim.alphaTarget(0);
+      // Keep nodes where they are dragged in explore mode for stability
+      if (!isExploreMode) {
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
     }
     
     return d3.drag()
@@ -677,21 +793,18 @@ function renderGraphVisualization() {
   }
   
   const zoom = d3.zoom()
-    .scaleExtent([0.1, 4])
+    .scaleExtent([0.1, 5]) // Increased max zoom
     .on('zoom', (event) => {
       zoomG.attr('transform', event.transform);
     });
 
   svg.call(zoom);
-
   svg.on('dblclick.zoom', () => {
-    svg.transition().duration(750).call(
-      zoom.transform,
-      d3.zoomIdentity
-    );
+    svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
   });
   
-  return simulation;
+  updateDisplay(); // Initial render
+  return simulation; // Return simulation in case it's needed elsewhere, though not currently used
 }
 
 function renderError(errorText) {
@@ -759,9 +872,16 @@ function render() {
     }
   } else if (renderMode === 'graph') {
     if (rawResponseData.head.vars.includes('node') && rawResponseData.head.vars.includes('linkedNode')) {
-      renderGraphVisualization();
+      renderGraphVisualization(); // Defaults to isExploreMode = false
     } else {
       flashMessage('Could not render Graph. Missing variables "node"/"linkedNode".');
+      renderTable();
+    }
+  } else if (renderMode === 'exploregraph') {
+    if (rawResponseData.head.vars.includes('node')) { // ExploreGraph only needs ?node initially
+      renderGraphVisualization(true); // Call with isExploreMode = true
+    } else {
+      flashMessage('Could not render ExploreGraph. Missing variable "node".');
       renderTable();
     }
   } else {
