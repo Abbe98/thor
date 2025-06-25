@@ -51,6 +51,7 @@ Not that nothing is stopping you form serving Thor configuration from a non-stat
         "url_template": "",
         "attribution": ""
     },
+    "enable_explore_graph": false,
     "color_scheme": {
         "main_brand": "",
         "main_brand_darkened": "",
@@ -105,6 +106,10 @@ Optional map background settings.
 
  - `url_template`: URL template for map tiles. [See URL template at leafletjs.com](https://leafletjs.com/reference.html#tilelayer).
  - `attribution`: String to use for map attribution, can take HTML.
+
+### `enable_explore_graph`
+
+Setting this to `true` enables the Explore Graph view.
 
 ### `autocomplete`
 

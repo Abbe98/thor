@@ -825,6 +825,37 @@ function setRenderMode(evt) {
   }
 }
 
+function populateRenderModeSelector() {
+  const renderModeSelector = document.querySelector('#renderModeSelector');
+
+  const defaultOptions = [
+    { value: 'table', text: 'Table' },
+    { value: 'imagegrid', text: 'Image Grid' },
+    { value: 'piechart', text: 'Pie Chart' },
+    { value: 'map', text: 'Map' },
+    { value: 'graph', text: 'Graph' },
+  ];
+
+  const exploreGraphOption = { value: 'exploregraph', text: 'Explore Graph' };
+
+  let options = defaultOptions;
+
+  if (window.thorConfig.enable_explore_graph) {
+    options = [...defaultOptions, exploreGraphOption];
+  }
+
+  options.forEach(option => {
+    const opt = document.createElement('option');
+    opt.value = option.value;
+    opt.text = option.text;
+    renderModeSelector.appendChild(opt);
+  });
+
+  renderModeSelector.addEventListener('change', (evt) => {
+    setRenderMode(evt.target);
+  });
+}
+
 function renderBoolean(bool) {
   const p = document.createElement('p');
   p.id = 'booleanResult';
@@ -878,6 +909,12 @@ function render() {
       renderTable();
     }
   } else if (renderMode === 'exploregraph') {
+    if (!window.thorConfig.enable_explore_graph) {
+      flashMessage('Explore Graph mode is disabled for this instance.');
+      renderTable();
+      return;
+    }
+
     if (rawResponseData.head.vars.includes('node')) { // ExploreGraph only needs ?node initially
       renderGraphVisualization(true); // Call with isExploreMode = true
     } else {
@@ -1056,6 +1093,8 @@ function init() {
   } else {
     document.querySelector('#query-library-modal-button').parentElement.remove();
   }
+
+  populateRenderModeSelector();
 
   document.querySelector('#documentation-modal-button').addEventListener('click', (event) => {
     event.preventDefault();
