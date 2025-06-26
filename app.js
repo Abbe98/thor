@@ -1,6 +1,6 @@
 YASQE.defaults.sparql.showQueryButton = false;
 YASQE.defaults.value = '';
-YASQE.defaults.autocompleters = ['prefixes', 'customPropertyCompleter', 'customClassCompleter', 'customUrisCompleter', 'customServicesCompleter', 'variables'];
+YASQE.defaults.autocompleters = ['prefixes', 'customCommentCompleter', 'customPropertyCompleter', 'customClassCompleter', 'customUrisCompleter', 'customServicesCompleter', 'variables'];
 
 let rawResponseData;
 YASQE.defaults.sparql.callbacks.success = data => {
