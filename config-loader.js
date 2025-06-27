@@ -24,7 +24,12 @@ function setConfig(data) {
     document.head.appendChild(favicon);
 
     if (window.thorConfig.demo_tour && !store.getItem('hasStartedTour')) {
-        tour.start();
+        // we need to check that we don't interfere with a shared query
+        const URLHashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove # before parsing
+        const queryParam = URLHashParams.get('query');
+        if (!queryParam || queryParam === '') {
+            startTour();
+        }
     }
     init();
 }

@@ -1118,8 +1118,8 @@ function init() {
   });
 
   const URLHashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove # before parsing
-  const queryParam = URLHashParams .get('query');
-  const autorunParam = URLHashParams .get('autorun');
+  const queryParam = URLHashParams.get('query');
+  const autorunParam = URLHashParams.get('autorun');
 
   if (queryParam) {
     yasqe.setValue(decodeURIComponent(queryParam));
