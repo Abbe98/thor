@@ -15,7 +15,6 @@ function setConfig(data) {
     colors.background_shaded ? setColor('--background-shaded', colors.background_shaded) : undefined;
     colors.border ? setColor('--border', colors.border) : undefined;
 
-
     // set the default favicon to the success one
     const favicon = document.createElement('link');
     favicon.rel = 'icon';
@@ -31,6 +30,16 @@ function setConfig(data) {
             startTour();
         }
     }
+
+    if (window.thorConfig.documentation_paragraphs) {
+        const documentationContainer = document.querySelector('#documentation-modal .content');
+        window.thorConfig.documentation_paragraphs.reverse().forEach(paragraph => {
+            const p = document.createElement('p');
+            p.innerHTML = paragraph;
+            documentationContainer.insertBefore(p, documentationContainer.firstChild);
+        });
+    }
+
     init();
 }
 

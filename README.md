@@ -40,6 +40,7 @@ Not that nothing is stopping you form serving Thor configuration from a non-stat
     "sparql_endpoint": "",
     "query_library_endpoint": "",
     "title": "",
+    "documentation_paragraphs": [],
     "demo_tour": {
         "demo_query": "",
         "demo_query_cursor_position": {
@@ -90,6 +91,10 @@ The endpoint to use for the query library. If left out, the query library will b
 ### `title`
 
 The title of the editor.
+
+### `documentation_paragraphs`
+
+An array of strings which will be inserted as paragraphs at the start of the documentation modal.
 
 ### `demo_tour`
 
