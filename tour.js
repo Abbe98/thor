@@ -69,7 +69,7 @@ tour.addStep('4', {
 tour.addStep('5', {
   title: 'Share Your Query',
   text: 'Sharing your query with others is as easy as clicking a button.',
-  attachTo: '.share-btn left',
+  attachTo: '#shareQueryButton left',
   buttons: btns,
 });
 
