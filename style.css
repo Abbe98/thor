@@ -353,7 +353,7 @@ dialog .close svg {
   border-color: var(--main-brand-darkened);
 }
 
-.share-btn {
+#shareQueryButton {
   position: absolute;
   z-index: 500;
   right: 20px;
@@ -362,7 +362,7 @@ dialog .close svg {
   cursor: pointer;
 }
 
-.share-btn svg {
+#shareQueryButton svg {
   fill: var(--secondary-brand);
 }
 
@@ -437,4 +437,9 @@ dialog .close svg {
 
 .float-left {
   float: left;
+}
+
+.thor-checkbox {
+  margin-right: 0.25rem;
+  vertical-align: middle;
 }

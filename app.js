@@ -48,7 +48,12 @@ YASQE.defaults.sparql.callbacks.error = data => {
 }
 
 function getSharableURL() {
-  return window.location.origin + window.location.pathname + '#query=' + encodeURIComponent(yasqe.getValue());
+  let url = window.location.origin + window.location.pathname + '#query=' + encodeURIComponent(yasqe.getValue());
+  const autorunCheckbox = document.querySelector('#autorunCheckbox');
+  if (autorunCheckbox && autorunCheckbox.checked) {
+    url += '&autorun=true';
+  }
+  return url;
 }
 
 function populateShareModal() {
@@ -1103,6 +1108,25 @@ function init() {
 
   findAndUpdateQueryTitle();
   yasqe.on('change', findAndUpdateQueryTitle);
+
+  document.querySelector('#autorunCheckbox').addEventListener('change', () => {
+    document.querySelector('#shareURLInput').value = getSharableURL();
+  });
+
+  document.querySelector('#shareQueryButton').addEventListener('click', () => {
+    populateShareModal();
+  });
+
+  const URLHashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove # before parsing
+  const queryParam = URLHashParams .get('query');
+  const autorunParam = URLHashParams .get('autorun');
+
+  if (queryParam) {
+    yasqe.setValue(decodeURIComponent(queryParam));
+    if (autorunParam === 'true') {
+      yasqe.query();
+    }
+  }
 }
 
 function sanitizeFilename(filename) {
