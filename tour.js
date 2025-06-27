@@ -49,7 +49,7 @@ tour.addStep('2', {
 tour.addStep('3', {
   title: 'The Query Library',
   text: 'You can also get started quickly by selecting one of the many preexisting queries in our query library.',
-  attachTo: 'a[href="#query-library-modal"] left',
+  attachTo: 'a[href="#query-library-modal-button"] left',
   buttons: btns,
   beforeShowPromise:() => {
     return new Promise(resolve => {
@@ -76,6 +76,6 @@ tour.addStep('5', {
 tour.addStep('5', {
   title: 'There is More to Explore',
   text: 'Looking for tips and tricks? Keyboard shortcuts? or something else? The documentation is here to help.',
-  attachTo: 'a[href="#documentation-modal"] left',
+  attachTo: 'a[href="#documentation-modal-button"] left',
   buttons: btns,
 });
