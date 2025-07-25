@@ -27,7 +27,7 @@ function setConfig(data) {
         const URLHashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove # before parsing
         const queryParam = URLHashParams.get('query');
         if (!queryParam || queryParam === '') {
-            startTour();
+            tour.start();
         }
     }
 
