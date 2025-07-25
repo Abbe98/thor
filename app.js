@@ -680,7 +680,33 @@ function renderGraphVisualization(isExploreMode = false) {
     flashMessage(`Loading data for ${clickedNodeData.label}...`, false);
     document.querySelector('#queryLoadingIndicator').style.display = 'block';
 
-    const sparqlQuery = `SELECT ?p ?o WHERE { <${clickedNodeData.uri}> ?p ?o . } LIMIT 25`;
+    const subject = clickedNodeData.uri;
+    // we automatically expand two levels of blank nodes
+    // as those can't be explored in the same way as URIs
+    const sparqlQuery = `
+      SELECT ?p ?o ?p2 ?o2 ?p3 ?o3
+      WHERE {
+        {
+          <${subject}> ?p ?o .
+          FILTER(!ISBLANK(?o))
+        }
+        UNION
+        {
+          <${subject}> ?p ?o .
+          FILTER(ISBLANK(?o))
+          ?o ?p2 ?o2 .
+          FILTER(!ISBLANK(?o2))
+        }
+        UNION
+        {
+          <${subject}> ?p ?o .
+          FILTER(ISBLANK(?o))
+          ?o ?p2 ?o2 .
+          FILTER(ISBLANK(?o2))
+          ?o2 ?p3 ?o3 .
+        }
+      }
+      LIMIT 25`;
     const endpoint = yasqe.options.sparql.endpoint;
 
     try {
@@ -707,48 +733,54 @@ function renderGraphVisualization(isExploreMode = false) {
       let newNodesAdded = false;
       let newLinksAdded = false;
 
-      sparqlResult.results.bindings.forEach(binding => {
-        const predicateUri = binding.p.value;
+      function processBinding(binding, parentNodeId, predicateUri) {
         const objectBinding = binding.o;
         const objectValue = objectBinding.value;
-        const objectType = objectBinding.type; // 'uri', 'literal', 'bnode'
+        const objectType = objectBinding.type;
 
-        let objectLabel = objectValue.split('/').pop().split('#').pop();
+        let objectLabel = (objectType === 'literal') ? objectValue : objectValue.split('/').pop().split('#').pop();
+        // blank nodes must be given unique IDs so that they don't connect to each other
+        let targetNodeId = (objectType === 'bnode') ? `bnode::${parentNodeId}::${objectValue}` : objectValue;
+
         if (objectType === 'literal') {
-            objectLabel = objectValue; // Use full literal value as label
+          targetNodeId = `literal::${parentNodeId}::${predicateUri}::${objectValue}`;
         }
-
-
-        let targetNodeId = objectValue;
-         // For literals, we might want a more unique ID if multiple nodes can have same literal string
-        if (objectType === 'literal') {
-             targetNodeId = `literal::${clickedNodeData.id}::${predicateUri}::${objectValue}`;
-        }
-
 
         if (!nodeMap.has(targetNodeId)) {
-          const newNode = {
+          nodes.push({
             id: targetNodeId,
             label: objectLabel,
-            uri: objectType === 'uri' ? objectValue : null, // URI only if it's a URI
-            isLiteral: objectType === 'literal',
-            isExplored: false, // New nodes are not explored by default
-          };
-          nodes.push(newNode);
-          nodeMap.set(targetNodeId, newNode);
+            uri: (objectType === 'uri') ? objectValue : null,
+            isExplored: (objectType === 'bnode'),
+          });
+          nodeMap.set(targetNodeId, nodes[nodes.length - 1]);
           newNodesAdded = true;
         }
 
         const predicateLabel = predicateUri.split('/').pop().split('#').pop();
-        const linkExists = links.some(l => l.source.id === clickedNodeData.id && l.target.id === targetNodeId && l.label === predicateLabel);
-
-        if (!linkExists) {
-          links.push({
-            source: clickedNodeData.id,
-            target: targetNodeId,
-            label: predicateLabel
-          });
+        if (!links.some(l => l.source.id === parentNodeId && l.target.id === targetNodeId)) {
+          links.push({ source: parentNodeId, target: targetNodeId, label: predicateLabel });
           newLinksAdded = true;
+        }
+
+        return targetNodeId;
+      }
+
+      sparqlResult.results.bindings.forEach(binding => {
+        const parentNodeId = clickedNodeData.id;
+        const predicateUri = binding.p.value;
+        const targetNodeId = processBinding(binding, parentNodeId, predicateUri);
+
+        if (binding.p2 && binding.o2) {
+          const subBinding = { o: binding.o2 };
+          const subPredicateUri = binding.p2.value;
+          const subTargetNodeId = processBinding(subBinding, targetNodeId, subPredicateUri);
+
+          if (binding.p3 && binding.o3) {
+            const nestedBinding = { o: binding.o3 };
+            const nestedPredicateUri = binding.p3.value;
+            processBinding(nestedBinding, subTargetNodeId, nestedPredicateUri);
+          }
         }
       });
 
