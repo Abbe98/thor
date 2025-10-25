@@ -167,6 +167,16 @@ You can mix static and dynamic sources across different autocomplete types:
 
 For detailed information about implementing dynamic autocomplete APIs, see the [Autocomplete API Specification](docs/autocomplete-api-specification.md).
 
+### `autocomplete_request_timeout`
+
+Optional timeout in milliseconds for dynamic autocomplete API requests. Defaults to 5000 (5 seconds) if not specified.
+
+```json
+{
+  "autocomplete_request_timeout": 3000
+}
+```
+
 ### `color_scheme`
 
 An object for the color scheme configuration. These are all exposed as `root` CSS variables so you can tweak the defaults in the browser's dev tools before adding them to the configuration.

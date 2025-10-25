@@ -262,7 +262,7 @@ Thor will automatically convert these to the object format internally.
 
 - Target response time: **< 200ms**
 - Maximum acceptable: **< 500ms**
-- Requests taking longer than 5 seconds will be cancelled by the client
+- Default client timeout: **5 seconds** (configurable via `autocomplete_request_timeout` in config.json)
 
 ### Result Limits
 
@@ -271,10 +271,21 @@ Thor will automatically convert these to the object format internally.
 
 ### Caching
 
-Implement server-side caching where appropriate:
-- Cache frequently requested queries
-- Use short TTL (5-60 minutes) for dynamic data
-- Use longer TTL (24 hours) for stable ontologies
+Caching is handled by the browser via standard HTTP cache headers. Implement appropriate cache headers in your API responses:
+
+```http
+Cache-Control: public, max-age=300    # 5 minutes for dynamic data
+Cache-Control: public, max-age=86400  # 24 hours for stable ontologies
+```
+
+Additional recommended headers:
+- `ETag` - For conditional requests
+- `Last-Modified` - For cache validation
+
+Thor relies on the browser's HTTP cache, so configure your server appropriately:
+- Use short cache times (5-60 minutes) for frequently changing data
+- Use longer cache times (24 hours) for stable ontologies
+- Implement cache validation with ETags for optimal performance
 
 ### Rate Limiting
 

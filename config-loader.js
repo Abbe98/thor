@@ -35,6 +35,13 @@ function setConfig(data) {
         window.thorConfig.autocomplete = normalizeAutocompleteConfig({});
     }
 
+    // Configure dynamic autocomplete options
+    if (window.thorConfig.autocomplete_request_timeout) {
+        ThorDynamicAutocomplete.configure({
+            requestTimeout: window.thorConfig.autocomplete_request_timeout
+        });
+    }
+
     document.querySelector('#title').innerText = window.thorConfig.title;
 
     const colors = window.thorConfig.color_scheme;

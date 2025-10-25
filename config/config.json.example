@@ -31,10 +31,5 @@
         "properties": [],
         "services": [],
         "uris": []
-    },
-    "_autocomplete_format_examples": {
-        "_comment": "Each autocomplete type supports two formats:",
-        "_static_array_example": ["http://schema.org/Person", "http://schema.org/Place"],
-        "_dynamic_url_example": "https://example.com/api/autocomplete/classes?query={query}"
     }
 }

@@ -2,15 +2,15 @@
  * Thor Dynamic Autocomplete Utility
  *
  * Handles dynamic URI lookups for autocompletion via external APIs.
- * Supports caching, URL templates, and multiple response formats.
+ * Supports URL templates and multiple response formats.
+ * Caching is handled by the browser via HTTP cache headers from the server.
  */
 
 const ThorDynamicAutocomplete = (function() {
-  // Cache for API responses (query -> results)
-  // Using a simple time-based cache with 5-minute TTL
-  const cache = new Map();
-  const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
-  const REQUEST_TIMEOUT = 5000; // 5 seconds
+  // Configuration with defaults
+  let config = {
+    requestTimeout: 5000 // 5 seconds default
+  };
 
   // In-flight requests to prevent duplicate API calls
   const inflightRequests = new Map();
@@ -46,29 +46,32 @@ const ThorDynamicAutocomplete = (function() {
   }
 
   /**
+   * Configure the autocomplete utility
+   */
+  function configure(options) {
+    if (options.requestTimeout) {
+      config.requestTimeout = options.requestTimeout;
+    }
+  }
+
+  /**
    * Fetch autocomplete suggestions from an API
+   * Caching is handled by browser HTTP cache based on server cache headers
    */
   async function fetchSuggestions(urlTemplate, query) {
     // Build the URL by replacing {query} with the encoded query
     const url = urlTemplate.replace('{query}', encodeURIComponent(query));
 
-    // Check cache first
-    const cacheKey = url;
-    const cached = cache.get(cacheKey);
-    if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
-      return cached.data;
-    }
-
     // Check if request is already in flight
-    if (inflightRequests.has(cacheKey)) {
-      return inflightRequests.get(cacheKey);
+    if (inflightRequests.has(url)) {
+      return inflightRequests.get(url);
     }
 
     // Create the fetch promise with timeout
     const fetchPromise = (async () => {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+        const timeoutId = setTimeout(() => controller.abort(), config.requestTimeout);
 
         const response = await fetch(url, {
           method: 'GET',
@@ -88,12 +91,6 @@ const ThorDynamicAutocomplete = (function() {
         const data = await response.json();
         const normalized = normalizeResponse(data);
 
-        // Cache the result
-        cache.set(cacheKey, {
-          data: normalized,
-          timestamp: Date.now()
-        });
-
         return normalized;
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -103,36 +100,18 @@ const ThorDynamicAutocomplete = (function() {
         }
         return [];
       } finally {
-        inflightRequests.delete(cacheKey);
+        inflightRequests.delete(url);
       }
     })();
 
     // Store the in-flight request
-    inflightRequests.set(cacheKey, fetchPromise);
+    inflightRequests.set(url, fetchPromise);
 
     return fetchPromise;
   }
 
-  /**
-   * Clear the cache (useful for testing or manual refresh)
-   */
-  function clearCache() {
-    cache.clear();
-  }
-
-  /**
-   * Get cache statistics (useful for debugging)
-   */
-  function getCacheStats() {
-    return {
-      size: cache.size,
-      keys: Array.from(cache.keys())
-    };
-  }
-
   return {
-    fetchSuggestions,
-    clearCache,
-    getCacheStats
+    configure,
+    fetchSuggestions
   };
 })();
