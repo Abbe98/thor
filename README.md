@@ -118,13 +118,56 @@ Setting this to `true` enables the Explore Graph view.
 
 ### `autocomplete`
 
-An object for the autocompletion configuration.
+An object for the autocompletion configuration. Each autocomplete type supports three formats:
 
- - `classes`: An array of plain-class-URIs to autocomplete, `http://schema.org/CreativeWork` not `schema:CreativeWork`.
- - `prefixes`: An array of prefixes to autocomplete, following SPARQL format, `rdfs: <http://www.w3.org/2000/01/rdf-schema#>`, etc.
- - `properties`: An array of plain-property-URIs to autocomplete, `http://www.w3.org/2000/01/rdf-schema#label` not `rdfs:label`.
- - `services`: An array of federated endpoints to autocomplete, `http://dbpedia.org/sparql`, etc.
- - `uris`: An array of URIs to autocomplete.
+1. **Static array** - A list of predefined values
+2. **Dynamic URL** - A URL template string for API-based lookups
+3. **Hybrid object** - Combined static and dynamic sources
+
+**Static configuration:**
+
+```json
+{
+  "autocomplete": {
+    "classes": ["http://schema.org/Person", "http://schema.org/Place"],
+    "prefixes": ["schema: <http://schema.org/>"]
+  }
+}
+```
+
+**Dynamic configuration:**
+
+```json
+{
+  "autocomplete": {
+    "classes": "https://example.com/api/autocomplete/classes?query={query}",
+    "properties": "https://example.com/api/autocomplete/properties?q={query}"
+  }
+}
+```
+
+**Hybrid configuration:**
+
+```json
+{
+  "autocomplete": {
+    "classes": {
+      "static": ["http://schema.org/Person"],
+      "dynamic": "https://example.com/api/autocomplete/classes?query={query}"
+    }
+  }
+}
+```
+
+#### Autocomplete Types
+
+ - `classes`: Plain class URIs to autocomplete, e.g., `http://schema.org/CreativeWork` (not `schema:CreativeWork`).
+ - `prefixes`: Prefixes to autocomplete, following SPARQL format, e.g., `rdfs: <http://www.w3.org/2000/01/rdf-schema#>`.
+ - `properties`: Plain property URIs to autocomplete, e.g., `http://www.w3.org/2000/01/rdf-schema#label` (not `rdfs:label`).
+ - `services`: Federated endpoints to autocomplete, e.g., `http://dbpedia.org/sparql`.
+ - `uris`: URIs to autocomplete.
+
+For detailed information about implementing dynamic autocomplete APIs, see the [Autocomplete API Specification](docs/autocomplete-api-specification.md).
 
 ### `color_scheme`
 
