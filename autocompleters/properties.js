@@ -14,20 +14,13 @@ const customPropertyCompleter = function(yasqe) {
   completer.persistent = false;
 
   if (hasDynamic) {
-    // Dynamic or hybrid mode: combine static + dynamic results
+    // Dynamic mode: fetch from API
     completer.get = async (token) => {
       const query = completer.preProcessToken(token);
-      const staticResults = config.static || [];
-
-      // Fetch dynamic results
-      const dynamicResults = await ThorDynamicAutocomplete.fetchSuggestions(config.dynamic, query);
-
-      // Combine and deduplicate
-      const combined = [...staticResults, ...dynamicResults];
-      return [...new Set(combined)]; // Remove duplicates
+      return await ThorDynamicAutocomplete.fetchSuggestions(config.dynamic, query);
     };
   } else {
-    // Static-only mode
+    // Static mode: use array (backwards compatible)
     completer.get = () => config.static;
   }
 

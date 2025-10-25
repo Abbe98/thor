@@ -8,22 +8,14 @@ YASQE.Autocompleters.prefixes = function(yasqe, completerName) {
   completer.persistent = false;
 
   if (hasDynamic) {
-    // Dynamic or hybrid mode: combine static + dynamic results
-    const originalGet = completer.get;
+    // Dynamic mode: fetch from API
     completer.get = async (token) => {
       // Get the query string from the token
       const query = typeof token === 'string' ? token : (token?.string || '');
-      const staticResults = config.static || [];
-
-      // Fetch dynamic results
-      const dynamicResults = await ThorDynamicAutocomplete.fetchSuggestions(config.dynamic, query);
-
-      // Combine and deduplicate
-      const combined = [...staticResults, ...dynamicResults];
-      return [...new Set(combined)]; // Remove duplicates
+      return await ThorDynamicAutocomplete.fetchSuggestions(config.dynamic, query);
     };
   } else {
-    // Static-only mode
+    // Static mode: use array (backwards compatible)
     completer.get = config.static;
   }
 

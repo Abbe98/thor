@@ -33,12 +33,8 @@
         "uris": []
     },
     "_autocomplete_format_examples": {
-        "_comment": "Each autocomplete type supports three formats:",
+        "_comment": "Each autocomplete type supports two formats:",
         "_static_array_example": ["http://schema.org/Person", "http://schema.org/Place"],
-        "_dynamic_url_example": "https://example.com/api/autocomplete/classes?query={query}",
-        "_hybrid_object_example": {
-            "static": ["http://schema.org/Person"],
-            "dynamic": "https://example.com/api/autocomplete/classes?query={query}"
-        }
+        "_dynamic_url_example": "https://example.com/api/autocomplete/classes?query={query}"
     }
 }

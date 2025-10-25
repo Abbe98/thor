@@ -13,9 +13,9 @@ Last Updated: 2025-10-25
 
 ## Configuration Format
 
-### Static Configuration (Current)
+### Static Configuration (Backwards Compatible)
 
-Currently, Thor supports static arrays in `config.json`:
+Thor supports static arrays in `config.json` (backwards compatible):
 
 ```json
 {
@@ -29,7 +29,7 @@ Currently, Thor supports static arrays in `config.json`:
 }
 ```
 
-### Dynamic Configuration (New)
+### Dynamic Configuration
 
 With dynamic lookup support, each autocomplete type can accept a **URL template string** instead of an array:
 
@@ -37,34 +37,23 @@ With dynamic lookup support, each autocomplete type can accept a **URL template 
 {
   "autocomplete": {
     "classes": "https://example.com/api/autocomplete/classes?query={query}",
-    "prefixes": ["schema: <http://schema.org/>"],
     "properties": "https://example.com/api/autocomplete/properties?q={query}",
-    "services": ["http://dbpedia.org/sparql"],
     "uris": "https://example.com/api/autocomplete/uris?search={query}"
   }
 }
 ```
 
-### Hybrid Configuration (Static + Dynamic)
+### Mixed Configuration
 
-For maximum flexibility, you can combine static and dynamic sources using an object format:
+You can mix static arrays and dynamic URLs across different autocomplete types:
 
 ```json
 {
   "autocomplete": {
-    "classes": {
-      "static": [
-        "http://schema.org/Person",
-        "http://schema.org/Place"
-      ],
-      "dynamic": "https://example.com/api/autocomplete/classes?query={query}"
-    },
+    "classes": "https://example.com/api/autocomplete/classes?query={query}",
     "prefixes": ["schema: <http://schema.org/>"],
-    "properties": "https://example.com/api/autocomplete/properties?q={query}",
-    "services": {
-      "static": ["http://dbpedia.org/sparql"],
-      "dynamic": "https://example.com/api/services?q={query}"
-    },
+    "properties": ["http://schema.org/name", "http://schema.org/description"],
+    "services": ["http://dbpedia.org/sparql"],
     "uris": "https://example.com/api/autocomplete/uris?search={query}"
   }
 }

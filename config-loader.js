@@ -1,5 +1,7 @@
 /**
- * Normalize autocomplete configuration to support static, dynamic, and hybrid formats
+ * Normalize autocomplete configuration to support static and dynamic formats
+ * - Array: static list (backwards compatible)
+ * - String: dynamic URL template
  */
 function normalizeAutocompleteConfig(autocompleteConfig) {
     const normalized = {};
@@ -8,23 +10,14 @@ function normalizeAutocompleteConfig(autocompleteConfig) {
     types.forEach(type => {
         const config = autocompleteConfig[type];
 
-        if (!config) {
-            // No configuration provided
-            normalized[type] = { static: [], dynamic: null };
-        } else if (Array.isArray(config)) {
-            // Static array format: ["uri1", "uri2"]
+        if (Array.isArray(config)) {
+            // Static array format: ["uri1", "uri2"] (backwards compatible)
             normalized[type] = { static: config, dynamic: null };
         } else if (typeof config === 'string') {
             // Dynamic URL template format: "https://api.example.com?q={query}"
             normalized[type] = { static: [], dynamic: config };
-        } else if (typeof config === 'object') {
-            // Hybrid object format: { static: [...], dynamic: "url" }
-            normalized[type] = {
-                static: Array.isArray(config.static) ? config.static : [],
-                dynamic: typeof config.dynamic === 'string' ? config.dynamic : null
-            };
         } else {
-            // Invalid format, default to empty
+            // No configuration or invalid format, default to empty static
             normalized[type] = { static: [], dynamic: null };
         }
     });

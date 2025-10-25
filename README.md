@@ -118,13 +118,12 @@ Setting this to `true` enables the Explore Graph view.
 
 ### `autocomplete`
 
-An object for the autocompletion configuration. Each autocomplete type supports three formats:
+An object for the autocompletion configuration. Each autocomplete type supports two formats:
 
-1. **Static array** - A list of predefined values
-2. **Dynamic URL** - A URL template string for API-based lookups
-3. **Hybrid object** - Combined static and dynamic sources
+- **Array** - Static list of predefined values (backwards compatible)
+- **String** - Dynamic URL template for API-based lookups
 
-**Static configuration:**
+**Static configuration (backwards compatible):**
 
 ```json
 {
@@ -146,15 +145,14 @@ An object for the autocompletion configuration. Each autocomplete type supports 
 }
 ```
 
-**Hybrid configuration:**
+You can mix static and dynamic sources across different autocomplete types:
 
 ```json
 {
   "autocomplete": {
-    "classes": {
-      "static": ["http://schema.org/Person"],
-      "dynamic": "https://example.com/api/autocomplete/classes?query={query}"
-    }
+    "classes": "https://example.com/api/autocomplete/classes?query={query}",
+    "prefixes": ["schema: <http://schema.org/>"],
+    "properties": ["http://schema.org/name", "http://schema.org/description"]
   }
 }
 ```
