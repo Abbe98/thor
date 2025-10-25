@@ -1,5 +1,47 @@
+/**
+ * Normalize autocomplete configuration to support static, dynamic, and hybrid formats
+ */
+function normalizeAutocompleteConfig(autocompleteConfig) {
+    const normalized = {};
+    const types = ['classes', 'prefixes', 'properties', 'services', 'uris'];
+
+    types.forEach(type => {
+        const config = autocompleteConfig[type];
+
+        if (!config) {
+            // No configuration provided
+            normalized[type] = { static: [], dynamic: null };
+        } else if (Array.isArray(config)) {
+            // Static array format: ["uri1", "uri2"]
+            normalized[type] = { static: config, dynamic: null };
+        } else if (typeof config === 'string') {
+            // Dynamic URL template format: "https://api.example.com?q={query}"
+            normalized[type] = { static: [], dynamic: config };
+        } else if (typeof config === 'object') {
+            // Hybrid object format: { static: [...], dynamic: "url" }
+            normalized[type] = {
+                static: Array.isArray(config.static) ? config.static : [],
+                dynamic: typeof config.dynamic === 'string' ? config.dynamic : null
+            };
+        } else {
+            // Invalid format, default to empty
+            normalized[type] = { static: [], dynamic: null };
+        }
+    });
+
+    return normalized;
+}
+
 function setConfig(data) {
     window.thorConfig = data;
+
+    // Normalize the autocomplete configuration
+    if (window.thorConfig.autocomplete) {
+        window.thorConfig.autocomplete = normalizeAutocompleteConfig(window.thorConfig.autocomplete);
+    } else {
+        window.thorConfig.autocomplete = normalizeAutocompleteConfig({});
+    }
+
     document.querySelector('#title').innerText = window.thorConfig.title;
 
     const colors = window.thorConfig.color_scheme;
