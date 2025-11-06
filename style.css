@@ -443,3 +443,52 @@ dialog .close svg {
   margin-right: 0.25rem;
   vertical-align: middle;
 }
+
+/* Inline styles extracted from index.html */
+
+.handle-container {
+  position: relative;
+}
+
+#result-label {
+  display: none;
+}
+
+#resultContainer {
+  width: calc(100% - 1rem);
+}
+
+#queryLoadingIndicator {
+  display: none;
+}
+
+#download {
+  display: none;
+}
+
+#messageContainer {
+  display: none;
+}
+
+#share-modal {
+  max-width: 500px;
+}
+
+#share-modal h3,
+#endpoint-modal h3 {
+  margin: 1.5rem .5rem;
+}
+
+#shareURLInput,
+#share-modal button.thor-button-confirm {
+  width: 483px;
+}
+
+#endpoint-modal {
+  max-width: 500px;
+}
+
+#endpointInput,
+#endpoint-modal button.thor-button-confirm {
+  width: 483px;
+}

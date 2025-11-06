@@ -22,58 +22,58 @@
     <button id="shareQueryButton" title="Share query"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg></button>
 
     <div id="queryEditor" class="m-lr-small"></div>
-    <div style="position: relative;" aria-hidden="true">
+    <div class="handle-container" aria-hidden="true">
       <div class="handle">≡</div>
     </div>
 
     <div class="flex space-between">
       <div class="flex">
         <select id="renderModeSelector" class="thor-input thor-select m-tb-small m-lr-small"></select>
-        <select class="thor-input thor-select m-tb-small m-lr-small" onchange="download(this)" id="downloadSelect">
+        <select class="thor-input thor-select m-tb-small m-lr-small" id="downloadSelect">
           <option>Download as</option>
         </select>
       </div>
 
       <div class="flex center-items">
-        <span style="display: none;" id="result-label" class="thor-label"></span>
-        <button class="thor-button thor-button-confirm m-tb-small m-lr-small" id="executeBtn" onclick="yasqe.query()">Execute</button>
+        <span id="result-label" class="thor-label"></span>
+        <button class="thor-button thor-button-confirm m-tb-small m-lr-small" id="executeBtn">Execute</button>
       </div>
     </div>
 
-    <div class="results float-left m-lr-small" id="resultContainer" style="width: calc(100% - 1rem)"></div>
+    <div class="results float-left m-lr-small" id="resultContainer"></div>
 
-    <div class="thor-loading" id="queryLoadingIndicator" style="display: none;">
+    <div class="thor-loading" id="queryLoadingIndicator">
       <img src="assets/loading.svg" />
     </div>
 
-    <a id="download" download style="display:none"></a>
+    <a id="download" download></a>
 
-    <p class="thor-alert" id="messageContainer" style="display: none;"></p>
+    <p class="thor-alert" id="messageContainer"></p>
 
-    <dialog id="share-modal" style="max-width: 500px;">
+    <dialog id="share-modal">
       <form method="dialog">
         <button class="close" title="Close modal">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
       </form>
-      <h3 style="margin: 1.5rem .5rem;">Shareable URL</h3>
-      <input type="url" readonly id="shareURLInput" class="m-tb-small m-lr-small thor-input" style="width:483px" onfocus="this.select();">
+      <h3>Shareable URL</h3>
+      <input type="url" readonly id="shareURLInput" class="m-tb-small m-lr-small thor-input">
       <div class="flex m-lr-small m-tb-small">
         <input type="checkbox" id="autorunCheckbox" class="thor-checkbox">
         <label for="autorunCheckbox" class="m-l-small">Autorun query on load</label>
       </div>
-      <button class="m-tb-small m-lr-small thor-button thor-button-confirm" style="width:483px" onclick="copyAndCloseShareModal()">Copy and close</button>
+      <button class="m-tb-small m-lr-small thor-button thor-button-confirm">Copy and close</button>
     </dialog>
 
-    <dialog closedby="any" id="endpoint-modal"  style="max-width: 500px;">
+    <dialog closedby="any" id="endpoint-modal">
       <form method="dialog">
         <button class="close" title="Close modal">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
       </form>
-      <h3 style="margin: 1.5rem .5rem;">Enter Endpoint</h3>
-      <input type="url" id="endpointInput" class="m-tb-small m-lr-small thor-input" style="width:483px" placeholder="http://example.com/sparql-endpoint">
-      <button class="m-tb-small m-lr-small thor-button thor-button-confirm" style="width:483px" onclick="closeAndSetEndpointModal()">Save</button>
+      <h3>Enter Endpoint</h3>
+      <input type="url" id="endpointInput" class="m-tb-small m-lr-small thor-input" placeholder="http://example.com/sparql-endpoint">
+      <button class="m-tb-small m-lr-small thor-button thor-button-confirm">Save</button>
     </dialog>
 
     <dialog closedby="any" id="documentation-modal">

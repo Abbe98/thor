@@ -1207,3 +1207,25 @@ handle.addEventListener('mousedown', e => {
   document.body.addEventListener('mousemove', onDrag);
   window.addEventListener('mouseup', onRelease);
 });
+
+// Event listeners to replace inline handlers
+
+document.getElementById('executeBtn').addEventListener('click', () => {
+  yasqe.query();
+});
+
+document.getElementById('downloadSelect').addEventListener('change', function() {
+  download(this);
+});
+
+document.getElementById('shareURLInput').addEventListener('focus', function() {
+  this.select();
+});
+
+document.querySelector('#share-modal button.thor-button-confirm').addEventListener('click', () => {
+  copyAndCloseShareModal();
+});
+
+document.querySelector('#endpoint-modal button.thor-button-confirm').addEventListener('click', () => {
+  closeAndSetEndpointModal();
+});
