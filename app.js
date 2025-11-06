@@ -312,16 +312,83 @@ function renderImages() {
   const container = document.createElement('div');
   container.id = 'resultImages';
 
-  setResultsLabel(rawResponseData.results.bindings.length, 500);
-  rawResponseData.results.bindings.slice(-100).forEach(row => {
-    if (validateAndSanitizeImageURL(row.thumbnail.value)) {
-      const img = document.createElement('img');
-      img.src = row.thumbnail.value;
-      container.appendChild(img);
-    }
+  setResultsLabel(rawResponseData.results.bindings.length, 100);
+
+  // we slice the results in sections of 100 images each
+  let slices = [];
+  for (let i = 0; i < rawResponseData.results.bindings.length; i += 100) {
+    slices.push(rawResponseData.results.bindings.slice(i, i + 100));
+  }
+
+  let renderedSlices = [];
+
+  slices.forEach(slice => {
+    let sliceContents = [];
+    slice.forEach(row => {
+      if (validateAndSanitizeImageURL(row.thumbnail.value)) {
+        const img = document.createElement('img');
+        img.src = row.thumbnail.value;
+        sliceContents.push(img);
+      }
+    });
+    renderedSlices.push(sliceContents);
   });
 
+  if (renderedSlices.length !== 0) {
+    renderedSlices[0].forEach(img => {
+      container.appendChild(img);
+    });
+  } else {
+    flashMessage('No images found.');
+  }
+
   document.querySelector('#resultContainer').appendChild(container);
+
+  const paginationContainer = document.createElement('div');
+  paginationContainer.classList.add('flex', 'center-items');
+  const previousButton = document.createElement('button');
+  previousButton.innerText = '←';
+  previousButton.classList.add('thor-button', 'thor-button-confirm', 'm-tb-small', 'm-lr-small');
+  const nextButton = document.createElement('button');
+  nextButton.innerText = '→';
+  nextButton.classList.add('thor-button', 'thor-button-confirm');
+  window.currentPage = 0;
+
+  function updatePagination(page) {
+    if (page < 0 || page >= renderedSlices.length) {
+      nextButton.disabled = true;
+      previousButton.disabled = true;
+      return;
+    }
+
+    window.currentPage = page;
+    container.innerHTML = '';
+    renderedSlices[window.currentPage].forEach(img => {
+      container.appendChild(img);
+    });
+    setResultsLabel(rawResponseData.results.bindings.length, 100 * (window.currentPage + 1));
+
+    if (window.currentPage === 0) {
+      previousButton.disabled = true;
+    } else {
+      previousButton.removeAttribute('disabled');
+    }
+
+    if (window.currentPage === renderedSlices.length - 1) {
+      nextButton.disabled = true;
+    } else {
+      nextButton.removeAttribute('disabled');
+    }
+  }
+
+  previousButton.addEventListener('click', () => updatePagination(window.currentPage - 1));
+  nextButton.addEventListener('click', () => updatePagination(window.currentPage + 1));
+
+  paginationContainer.appendChild(previousButton);
+  paginationContainer.appendChild(nextButton);
+  document.querySelector('#resultContainer').appendChild(paginationContainer);
+  // trigger pagination update to make sure the button states are correct
+  updatePagination(window.currentPage);
 }
 
 function renderMap() {
